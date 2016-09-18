@@ -9,6 +9,9 @@ public class City {
 	public int getId() {
 		return id;
 	}
+	public int getProvinceId() {
+		return provinceId;
+	}
 	public void setProvinceId(int provinceId) {
 		this.provinceId = provinceId;
 	}
