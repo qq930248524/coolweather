@@ -1,15 +1,17 @@
-package db;
+package com.example.coolweather.db;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import com.example.coolweather.model.City;
+import com.example.coolweather.model.County;
+import com.example.coolweather.model.Province;
 
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import model.City;
-import model.County;
-import model.Province;
+
 
 public class CoolWeatherDB {
 	//name
@@ -93,11 +95,11 @@ public class CoolWeatherDB {
 	}
 	public List<County> loadCounty(int cityId){
 		List <County> list = new ArrayList<County>();
-		Cursor	cursor = db.query("County", null, "cityId = ?", new String[] {String.valueOf(cityId)}, null, null, null);
+		Cursor	cursor = db.query("County", null, "city_id = ?", new String[] {String.valueOf(cityId)}, null, null, null);
 		if(cursor.moveToFirst()){
 			do{
 				County county = new County();
-				county.setCityId(cursor.getInt(cursor.getColumnIndex("id")));
+				county.setId(cursor.getInt(cursor.getColumnIndex("id")));
 				county.setCountyName(cursor.getString(cursor.getColumnIndex("county_name")));
 				county.setCountyCode(cursor.getString(cursor.getColumnIndex("county_code")));
 				county.setCityId(cityId);

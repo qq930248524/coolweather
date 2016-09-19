@@ -1,14 +1,22 @@
-package activity;
+package com.example.coolweather.activity;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import com.example.coolweather.R;
+import com.example.coolweather.db.CoolWeatherDB;
+import com.example.coolweather.model.City;
+import com.example.coolweather.model.County;
+import com.example.coolweather.model.Province;
+import com.example.coolweather.util.HttpCallbackListener;
+import com.example.coolweather.util.HttpUtil;
+import com.example.coolweather.util.Utility;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.AdapterView;
@@ -17,13 +25,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-import db.CoolWeatherDB;
-import model.City;
-import model.County;
-import model.Province;
-import util.HttpCallbackListener;
-import util.HttpUtil;
-import util.Utility;
+
 
 public class ChooseAreaActivity extends Activity {
 	public static final int LEVEL_PROVINCE = 0;
@@ -53,36 +55,46 @@ public class ChooseAreaActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.choose_area);
+		Log.i("sad", "sdfasdfsdfds");
+		Log.i("sad", "sdfasdfsdfds");
+		Log.i("sad", "sdfasdfsdfds");
 		
 		initView();
 		queryProvince();
 	}
 	
 	public void initView(){
+		currentLevel = LEVEL_PROVINCE;
 		titileText = (TextView) findViewById(R.id.title_text);
-		coolWeatherDB = CoolWeatherDB.getInstance(this);
+		coolWeatherDB = CoolWeatherDB.getInstance(ChooseAreaActivity.this);
+		
 		adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, dataList);
 		listView = (ListView) findViewById(R.id.listView);
+		listView.setAdapter(adapter);
 		listView.setOnItemClickListener(new OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> arg0, View view, int index, long arg3) {
 				// TODO Auto-generated method stub
 				if(currentLevel == LEVEL_PROVINCE){
+					currentLevel = LEVEL_CITY;
 					selectedProvince = provinceList.get(index);
 					queryCity();
 				}else if (currentLevel == LEVEL_CITY){
+					currentLevel = LEVEL_COUNTY;
 					selectedCity = cityList.get(index);
 					queryCounty();
 				}
 			}
+			
 		});
+		
+		
 		progressDialog = new ProgressDialog(this);
 		progressDialog.setMessage("正在加载。。。");
 		progressDialog.setCanceledOnTouchOutside(false);
 	}
 	
 	private void queryProvince(){
-		currentLevel = LEVEL_PROVINCE;
 		provinceList = coolWeatherDB.loadProvinces();
 		if(provinceList.size() > 0){
 			dataList.clear();
@@ -97,8 +109,34 @@ public class ChooseAreaActivity extends Activity {
 		}
 	}
 	
-	private void queryCity(){}
-	private void queryCounty(){}
+	private void queryCity(){
+		cityList = coolWeatherDB.loadCities(selectedProvince.getId());
+		if(cityList.size() > 0){
+			dataList.clear();
+			for(City p : cityList){
+				dataList.add(p.getCityName());
+			}
+			adapter.notifyDataSetChanged();
+			listView.setSelection(0);
+			titileText.setText(selectedProvince.getProvinceName());
+		} else {
+			queryFromServer(selectedProvince.getProvinceCode());
+		}
+	}
+	private void queryCounty(){
+		countyList = coolWeatherDB.loadCounty(selectedCity.getId());
+		if(countyList.size() > 0){
+			dataList.clear();
+			for(County p : countyList){
+				dataList.add(p.getCountyName());
+			}
+			adapter.notifyDataSetChanged();
+			listView.setSelection(0);
+			titileText.setText(selectedCity.getCityName());
+		} else {
+			queryFromServer(selectedCity.getCityCode());
+		}
+	}
 	
 	private void queryFromServer(String code){
 		String address;
@@ -171,15 +209,16 @@ public class ChooseAreaActivity extends Activity {
 	};
 
 	public void onBackPressed(){
+		System.out.println("================onBackPressed: currentLevel = " + currentLevel);
 		switch(currentLevel){
 		case LEVEL_PROVINCE:
-			queryProvince();
+			finish();
 			break;
 		case LEVEL_CITY:
-			queryCity();
+			queryProvince();
 			break;
 		case LEVEL_COUNTY:
-			queryCounty();
+			queryCity();
 			break;
 		default:
 			finish();

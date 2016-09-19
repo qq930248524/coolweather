@@ -1,10 +1,12 @@
-package util;
+package com.example.coolweather.util;
+
+import com.example.coolweather.db.CoolWeatherDB;
+import com.example.coolweather.model.City;
+import com.example.coolweather.model.County;
+import com.example.coolweather.model.Province;
 
 import android.text.TextUtils;
-import db.CoolWeatherDB;
-import model.City;
-import model.County;
-import model.Province;
+
 
 public class Utility {
 	//detail province
@@ -15,8 +17,8 @@ public class Utility {
 				for(String p : allProvinces){
 					String[] provinces = p.split("\\|"); 
 					Province province = new Province();
-					province.setProvinceName(provinces[0]);
 					province.setProvinceName(provinces[1]);
+					province.setProvinceCode(provinces[0]);
 					coolWeatherDB.saveProvince(province);
 				}
 				return true;
@@ -33,8 +35,8 @@ public class Utility {
 				for(String p : allCitys){
 					String [] array = p.split("\\|");
 					City city = new City();
-					city.setCityName(array[0]);
-					city.setCityCode(array[1]);
+					city.setCityName(array[1]);
+					city.setCityCode(array[0]);
 					city.setProvinceId(provinceId);
 					coolWeatherDB.saveCity(city);
 				}
@@ -53,8 +55,8 @@ public class Utility {
 				for(String p : counties){
 					String[] array = p.split("\\|");
 					County county = new County();
-					county.setCountyName(array[0]);
-					county.setCountyCode(array[1]);
+					county.setCountyName(array[1]);
+					county.setCountyCode(array[0]);
 					county.setCityId(cityId);
 					coolWeatherDB.saveCounty(county);
 				}

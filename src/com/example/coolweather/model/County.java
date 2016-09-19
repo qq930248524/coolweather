@@ -1,4 +1,4 @@
-package model;
+package com.example.coolweather.model;
 
 public class County {
 	private int id;
