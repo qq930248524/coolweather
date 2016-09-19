@@ -14,9 +14,9 @@ import com.example.coolweather.util.Utility;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.AdapterView;
@@ -31,6 +31,7 @@ public class ChooseAreaActivity extends Activity {
 	public static final int LEVEL_PROVINCE = 0;
 	public static final int LEVEL_CITY = 1;
 	public static final int LEVEL_COUNTY = 2;
+	public static final int LEVEL_WEATHER = 3;
 	
 	private ProgressDialog progressDialog;
 	private TextView titileText;
@@ -55,9 +56,6 @@ public class ChooseAreaActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.choose_area);
-		Log.i("sad", "sdfasdfsdfds");
-		Log.i("sad", "sdfasdfsdfds");
-		Log.i("sad", "sdfasdfsdfds");
 		
 		initView();
 		queryProvince();
@@ -83,15 +81,20 @@ public class ChooseAreaActivity extends Activity {
 					currentLevel = LEVEL_COUNTY;
 					selectedCity = cityList.get(index);
 					queryCounty();
+				}else if(currentLevel == LEVEL_COUNTY){
+					currentLevel = LEVEL_WEATHER;
+					showWeather();
 				}
 			}
-			
 		});
-		
-		
 		progressDialog = new ProgressDialog(this);
 		progressDialog.setMessage("正在加载。。。");
 		progressDialog.setCanceledOnTouchOutside(false);
+	}
+	
+	private void showWeather(){
+		//Intent intent = new Intent(ChooseAreaActivity.this, Weather.class);
+		//intent.putExtra("code", selectedCounty.getCountyCode());
 	}
 	
 	private void queryProvince(){
@@ -178,12 +181,15 @@ public class ChooseAreaActivity extends Activity {
 						progressDialog.dismiss();
 						switch(currentLevel){
 							case LEVEL_PROVINCE:
+								currentLevel = LEVEL_PROVINCE;
 								queryProvince();
 								break;
 							case LEVEL_CITY:
+								currentLevel = LEVEL_CITY;
 								queryCity();
 								break;
 							case LEVEL_COUNTY:
+								currentLevel = LEVEL_COUNTY;
 								queryCounty();
 								break;
 							default:
@@ -215,9 +221,11 @@ public class ChooseAreaActivity extends Activity {
 			finish();
 			break;
 		case LEVEL_CITY:
+			currentLevel = LEVEL_PROVINCE;
 			queryProvince();
 			break;
 		case LEVEL_COUNTY:
+			currentLevel = LEVEL_CITY;
 			queryCity();
 			break;
 		default:
