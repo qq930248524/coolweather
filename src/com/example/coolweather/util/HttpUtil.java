@@ -4,8 +4,9 @@ import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
+
+import android.content.Context;
 
 public class HttpUtil {
 	public static void sendHttpRequest(final String address, final HttpCallbackListener listener){
@@ -46,4 +47,5 @@ public class HttpUtil {
 			}
 		}).start();
 	}
+	
 }

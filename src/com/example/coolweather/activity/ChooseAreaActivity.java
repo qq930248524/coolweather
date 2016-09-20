@@ -15,7 +15,9 @@ import com.example.coolweather.util.Utility;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.Window;
@@ -54,9 +56,17 @@ public class ChooseAreaActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
-		requestWindowFeature(Window.FEATURE_NO_TITLE);
-		setContentView(R.layout.choose_area);
 		
+		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+		if(prefs.getBoolean("county_code", false) && !getIntent().getBooleanExtra("is_weather_return", false)){
+			Intent intent = new Intent(this, WeatherActivity.class);
+			startActivity(intent);
+			finish();
+			return;
+		}
+		
+		requestWindowFeature(Window.FEATURE_NO_TITLE);
+		setContentView(R.layout.choose_area);		
 		initView();
 		queryProvince();
 	}
@@ -83,18 +93,18 @@ public class ChooseAreaActivity extends Activity {
 					queryCounty();
 				}else if(currentLevel == LEVEL_COUNTY){
 					currentLevel = LEVEL_WEATHER;
-					showWeather();
+					selectedCounty = countyList.get(index);
+					
+					Intent intent = new Intent(ChooseAreaActivity.this, WeatherActivity.class);
+					intent.putExtra("county_code", selectedCounty.getCountyCode());
+					startActivity(intent);
+					finish();					
 				}
 			}
 		});
 		progressDialog = new ProgressDialog(this);
 		progressDialog.setMessage("正在加载。。。");
 		progressDialog.setCanceledOnTouchOutside(false);
-	}
-	
-	private void showWeather(){
-		//Intent intent = new Intent(ChooseAreaActivity.this, Weather.class);
-		//intent.putExtra("code", selectedCounty.getCountyCode());
 	}
 	
 	private void queryProvince(){
@@ -191,7 +201,7 @@ public class ChooseAreaActivity extends Activity {
 							case LEVEL_COUNTY:
 								currentLevel = LEVEL_COUNTY;
 								queryCounty();
-								break;
+								break;								
 							default:
 								break;
 					}
@@ -229,7 +239,6 @@ public class ChooseAreaActivity extends Activity {
 			queryCity();
 			break;
 		default:
-			finish();
 			break;
 		}
 	}
