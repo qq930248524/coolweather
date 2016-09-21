@@ -1,6 +1,7 @@
 package com.example.coolweather.activity;
 
 import com.example.coolweather.R;
+import com.example.coolweather.service.AutoUpdateService;
 import com.example.coolweather.util.HttpCallbackListener;
 import com.example.coolweather.util.HttpUtil;
 import com.example.coolweather.util.Utility;
@@ -11,6 +12,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
+import android.text.style.UpdateAppearance;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
@@ -104,6 +106,8 @@ public class WeatherActivity extends Activity implements OnClickListener{
 			// 没有县级代号时就直接显示本地天气
 			showWeather();
 		}
+		Intent intent = new Intent(this, AutoUpdateService.class);
+		startService(intent);
 	}
 	
 	private void queryWeather(String countyCode){
@@ -116,12 +120,14 @@ public class WeatherActivity extends Activity implements OnClickListener{
 	
 	private void showWeather(){
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+		
 		textCityName.setText(prefs.getString("city_name", ""));
 		textTemp1.setText(prefs.getString("temp1", ""));
 		textTemp2.setText(prefs.getString("temp2", ""));
 		textWeatherDesp.setText(prefs.getString("weather_desp", ""));
-		textPublishTime.setText(prefs.getString("publish_time", ""));
+		textPublishTime.setText("发布时间" + prefs.getString("publish_time", ""));
 		textCurrentData.setText(prefs.getString("current_date", ""));
+		
 		layoutWeatherInfo.setVisibility(View.VISIBLE);
 		textCityName.setVisibility(View.VISIBLE);
 	}

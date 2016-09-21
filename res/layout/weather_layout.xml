@@ -13,11 +13,12 @@
 
         <Button 
             android:id="@+id/btn_switchCity"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
             android:layout_alignParentLeft="true"
             android:layout_marginLeft="10dp"
             android:layout_marginTop="10dp"
+			android:background="@drawable/city"
             android:textColor="#fff"
             android:textSize="24sp"/>"
 
@@ -31,11 +32,12 @@
 
         <Button
             android:id="@+id/btn_refreshWeather"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
             android:layout_alignParentRight="true"
             android:layout_marginRight="10dp"
             android:layout_marginTop="10dp"
+            android:background="@drawable/refresh"
             android:textColor="#fff"
             android:textSize="24sp" />
 

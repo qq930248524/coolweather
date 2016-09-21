@@ -58,12 +58,14 @@ public class ChooseAreaActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-		if(prefs.getBoolean("county_code", false) && !getIntent().getBooleanExtra("is_weather_return", false)){
-			Intent intent = new Intent(this, WeatherActivity.class);
+		
+		if(prefs.getBoolean("city_selected", false) && !getIntent().getBooleanExtra("is_weather_return", false)){
+			Intent intent = new Intent(ChooseAreaActivity.this, WeatherActivity.class);
 			startActivity(intent);
 			finish();
 			return;
 		}
+
 		
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.choose_area);		
