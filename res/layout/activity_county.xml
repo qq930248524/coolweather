@@ -3,10 +3,11 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" >
-    
-    <TextView 
+
+    <FrameLayout
+        android:id="@+id/id_main_layout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="test"/>
+        android:layout_height="match_parent" >
+    </FrameLayout>
 
 </LinearLayout>

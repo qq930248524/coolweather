@@ -1,26 +1,26 @@
-package com.example.coolweather.activity;
+package com.example.coolWeather.fragment;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import com.example.coolweather.R;
-import com.example.coolweather.db.CoolWeatherDB;
-import com.example.coolweather.model.City;
-import com.example.coolweather.model.County;
-import com.example.coolweather.model.Province;
-import com.example.coolweather.util.HttpCallbackListener;
-import com.example.coolweather.util.HttpUtil;
-import com.example.coolweather.util.Utility;
+import com.example.coolWeather.activity.ManageCounty;
+import com.example.coolWeather.db.CoolWeatherDB;
+import com.example.coolWeather.model.City;
+import com.example.coolWeather.model.County;
+import com.example.coolWeather.model.Province;
+import com.example.coolWeather.util.HttpCallbackListener;
+import com.example.coolWeather.util.HttpUtil;
+import com.example.coolWeather.util.Utility;
+import com.example.greattest.R;
 
 import android.app.Activity;
+import android.app.Fragment;
 import android.app.ProgressDialog;
-import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.text.TextUtils;
+import android.view.LayoutInflater;
 import android.view.View;
-import android.view.Window;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
@@ -28,8 +28,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-
-public class ChooseAreaActivity extends Activity {
+public class CountyListFragment extends Fragment {
 	public static final int LEVEL_PROVINCE = 0;
 	public static final int LEVEL_CITY = 1;
 	public static final int LEVEL_COUNTY = 2;
@@ -51,35 +50,37 @@ public class ChooseAreaActivity extends Activity {
 	private County selectedCounty;
 	
 	private int currentLevel;
+	private View myself;
+	private String picCode;
 	
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
+	public void onAttach(Activity activity) {
 		// TODO Auto-generated method stub
-		super.onCreate(savedInstanceState);
-		
-		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-		
-		if(prefs.getBoolean("city_selected", false) && !getIntent().getBooleanExtra("is_weather_return", false)){
-			Intent intent = new Intent(ChooseAreaActivity.this, WeatherActivity.class);
-			startActivity(intent);
-			finish();
-			return;
-		}
-
-		
-		requestWindowFeature(Window.FEATURE_NO_TITLE);
-		setContentView(R.layout.choose_area);		
+		super.onAttach(activity);
+	}
+	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+		// TODO Auto-generated method stub
+		myself = inflater.inflate(R.layout.fragment_area_choose, null);
 		initView();
 		queryProvince();
+		return myself;
 	}
 	
+	@Override
+	public void onActivityCreated(Bundle savedInstanceState) {
+		// TODO Auto-generated method stub
+		super.onActivityCreated(savedInstanceState);
+	}
+	
+
 	public void initView(){
 		currentLevel = LEVEL_PROVINCE;
-		titileText = (TextView) findViewById(R.id.title_text);
-		coolWeatherDB = CoolWeatherDB.getInstance(ChooseAreaActivity.this);
+		titileText = (TextView) myself.findViewById(R.id.title_text);
+		coolWeatherDB = CoolWeatherDB.getInstance(getActivity());
 		
-		adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, dataList);
-		listView = (ListView) findViewById(R.id.listView);
+		adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, dataList);
+		listView = (ListView) myself.findViewById(R.id.listView);
 		listView.setAdapter(adapter);
 		listView.setOnItemClickListener(new OnItemClickListener() {
 			@Override
@@ -97,14 +98,13 @@ public class ChooseAreaActivity extends Activity {
 					currentLevel = LEVEL_WEATHER;
 					selectedCounty = countyList.get(index);
 					
-					Intent intent = new Intent(ChooseAreaActivity.this, WeatherActivity.class);
-					intent.putExtra("county_code", selectedCounty.getCountyCode());
-					startActivity(intent);
-					finish();					
+					//切换碎片到显示地址
+					queryCode();
+
 				}
 			}
 		});
-		progressDialog = new ProgressDialog(this);
+		progressDialog = new ProgressDialog(getActivity());
 		progressDialog.setMessage("正在加载。。。");
 		progressDialog.setCanceledOnTouchOutside(false);
 	}
@@ -152,6 +152,9 @@ public class ChooseAreaActivity extends Activity {
 			queryFromServer(selectedCity.getCityCode());
 		}
 	}
+	private void queryCode(){
+		queryFromServer(selectedCounty.getCountyCode());
+	}
 	
 	private void queryFromServer(String code){
 		String address;
@@ -168,24 +171,29 @@ public class ChooseAreaActivity extends Activity {
 	private HttpCallbackListener httpCallback = new HttpCallbackListener() {
 		
 		@Override
-		public void onFinish(String response) {
+		public void onFinish(Object response) {
 			boolean result = false;
 			// TODO Auto-generated method stub
 			switch(currentLevel){
 				case LEVEL_PROVINCE:
-					result = Utility.handleProvinceResponse(coolWeatherDB, response);
+					result = Utility.handleProvinceResponse(coolWeatherDB, (String)response);
 					break;
 				case LEVEL_CITY:
-					result = Utility.handleCityResponse(coolWeatherDB, response, selectedProvince.getId());
+					result = Utility.handleCityResponse(coolWeatherDB, (String)response, selectedProvince.getId());
 					break;
 				case LEVEL_COUNTY:
-					result = Utility.handleCountyResponse(coolWeatherDB, response, selectedCity.getId());
+					result = Utility.handleCountyResponse(coolWeatherDB, (String)response, selectedCity.getId());
 					break;
+				case LEVEL_WEATHER:
+					progressDialog.dismiss();
+					String[] array = ((String) response).split("\\|");
+					picCode = array[1];
+					result = true;
 				default:
 					break;
 			}
 			if(result){
-				runOnUiThread(new Runnable() {					
+				getActivity().runOnUiThread(new Runnable() {					
 					@Override
 					public void run() {
 						// TODO Auto-generated method stub
@@ -203,7 +211,12 @@ public class ChooseAreaActivity extends Activity {
 							case LEVEL_COUNTY:
 								currentLevel = LEVEL_COUNTY;
 								queryCounty();
-								break;								
+								break;			
+							case LEVEL_WEATHER:
+								if(!TextUtils.isEmpty(picCode)){
+									((ManageCounty) getActivity()).showGeography(picCode, selectedCounty.getCountyName());
+								}
+								break;
 							default:
 								break;
 					}
@@ -216,11 +229,11 @@ public class ChooseAreaActivity extends Activity {
 		@Override
 		public void onError(Exception e) {
 			// TODO Auto-generated method stub
-			runOnUiThread(new Runnable() {
+			getActivity().runOnUiThread(new Runnable() {
 				public void run() {
 					//closeProgressDialog();
 					progressDialog.dismiss();
-					Toast.makeText(ChooseAreaActivity.this, "加载失败！", Toast.LENGTH_SHORT).show();
+					Toast.makeText(getActivity(), "加载失败！", Toast.LENGTH_SHORT).show();
 				}
 			});
 		}
@@ -230,7 +243,7 @@ public class ChooseAreaActivity extends Activity {
 		System.out.println("================onBackPressed: currentLevel = " + currentLevel);
 		switch(currentLevel){
 		case LEVEL_PROVINCE:
-			finish();
+			//todo switch intent
 			break;
 		case LEVEL_CITY:
 			currentLevel = LEVEL_PROVINCE;
@@ -244,4 +257,6 @@ public class ChooseAreaActivity extends Activity {
 			break;
 		}
 	}
+	
+
 }

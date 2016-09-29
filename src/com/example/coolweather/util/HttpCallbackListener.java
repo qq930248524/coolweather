@@ -1,6 +1,6 @@
-package com.example.coolweather.util;
+package com.example.coolWeather.util;
 
 public interface HttpCallbackListener {
-	void onFinish(String response);
+	void onFinish(Object response);
 	void onError(Exception e);
 }

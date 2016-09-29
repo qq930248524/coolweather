@@ -1,14 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.coolweather"
+    package="com.example.greattest"
     android:versionCode="1"
     android:versionName="1.0" >
 
     <uses-permission android:name="android.permission.INTERNET"/>
-    
     <uses-sdk
-        android:minSdkVersion="14"
-        android:targetSdkVersion="22" />
+        android:minSdkVersion="16"
+        android:targetSdkVersion="19" />
 
     <application
         android:allowBackup="true"
@@ -16,17 +15,17 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name="com.example.coolweather.activity.ChooseAreaActivity"
+            android:name="com.example.coolWeather.activity.ShowWeather"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>        
+        </activity>
         
-        <activity android:name="com.example.coolweather.activity.WeatherActivity"></activity>
-        <service android:name="com.example.coolweather.service.AutoUpdateService"></service>
-        <receiver android:name="com.example.coolweather.receive.WeatherReceiver"></receiver>
+        <activity android:name="com.example.coolWeather.activity.ManageCounty"></activity>
+        <service android:name="com.example.coolWeather.service.AutoUpdateServicevice"></service>
+        <receiver android:name="com.example.coolWeather.receive.WeatherReceiveriver"></receiver>
     </application>
 
 </manifest>

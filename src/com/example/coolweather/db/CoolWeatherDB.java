@@ -1,11 +1,12 @@
-package com.example.coolweather.db;
+package com.example.coolWeather.db;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import com.example.coolweather.model.City;
-import com.example.coolweather.model.County;
-import com.example.coolweather.model.Province;
+import com.example.coolWeather.model.City;
+import com.example.coolWeather.model.County;
+import com.example.coolWeather.model.Province;
+import com.example.coolWeather.model.StarCounty;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -35,6 +36,7 @@ public class CoolWeatherDB {
 		}
 		return coolWeatherDB;
 	}
+	public void closs(){}
 	
 	//将Province实例存储到数据库
 	public void saveProvince(Province province){
@@ -57,7 +59,8 @@ public class CoolWeatherDB {
 				province.setProvinceCode(cursor.getString(cursor.getColumnIndex("province_code")));
 				list.add(province);				
 			}while(cursor.moveToNext());
-		}				
+		}
+		cursor.close();
 		return list;
 	}
 	
@@ -81,6 +84,7 @@ public class CoolWeatherDB {
 				list.add(city);
 			}while(cursor.moveToNext());
 		}
+		cursor.close();
 		return list;
 	}
 	
@@ -95,7 +99,8 @@ public class CoolWeatherDB {
 	}
 	public List<County> loadCounty(int cityId){
 		List <County> list = new ArrayList<County>();
-		Cursor	cursor = db.query("County", null, "city_id = ?", new String[] {String.valueOf(cityId)}, null, null, null);
+		Cursor	cursor = db.query("County", null, "city_id = ?", 
+				new String[] {String.valueOf(cityId)}, null, null, null);
 		if(cursor.moveToFirst()){
 			do{
 				County county = new County();
@@ -106,6 +111,56 @@ public class CoolWeatherDB {
 				list.add(county);
 			}while(cursor.moveToNext());
 		}
+		cursor.close();
+		return list;
+	}
+	
+	public Boolean isStarCounty(String weatherCode){
+		Boolean flag = false;
+		Cursor cursor =	db.query("StarCounty", null, "weather_code = ?",
+				new String[] {String.valueOf(weatherCode)}, null, null, null);
+		flag = cursor.moveToFirst()?true:false;
+		cursor.close();
+		return flag;
+	}
+	
+	public void saveStarCounty(StarCounty starCounty){
+		if(!isStarCounty(starCounty.weather_code)){
+			ContentValues values = new ContentValues();
+			values.put("weather_code", starCounty.weather_code);
+			values.put("county_code", starCounty.county_code);
+			values.put("county_name", starCounty.county_name);
+			values.put("days", starCounty.days);
+			values.put("temp_heigth", starCounty.temp_height);
+			values.put("temp_low", starCounty.temp_low);
+			values.put("weather", starCounty.weather);
+			db.insert("StarCounty", null, values);
+		}
+	}
+	public void removeStarCounty(StarCounty starCounty){
+		if(isStarCounty(starCounty.weather_code)){
+			db.delete("StarCounty", "weather_code = ?", new String[]{String.valueOf(starCounty.weather_code)});
+		}
+	}
+	public List<StarCounty> loadStarCountyList(){
+		List<StarCounty> list = new ArrayList<StarCounty>();
+		Cursor cursor = db.query("StarCounty", null, null, null, null, null, null);
+		if(cursor.moveToFirst()){
+			do{
+				StarCounty starCounty =  new StarCounty();
+				
+				starCounty.setCounty_code	(cursor.getString(cursor.getColumnIndex("county_code")));
+				starCounty.setCounty_name	(cursor.getString(cursor.getColumnIndex("county_name")));
+				starCounty.setDays			(cursor.getString(cursor.getColumnIndex("days")));
+				starCounty.setTemp_height	(cursor.getString(cursor.getColumnIndex("temp_height")));
+				starCounty.setTemp_low		(cursor.getString(cursor.getColumnIndex("temp_low")));
+				starCounty.setWeather		(cursor.getString(cursor.getColumnIndex("weather")));
+				starCounty.setWeather_code	(cursor.getString(cursor.getColumnIndex("weather_code")));
+				
+				list.add(starCounty);
+			}while(cursor.moveToNext());
+		}
+		cursor.close();
 		return list;
 	}
 

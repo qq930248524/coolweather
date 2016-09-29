@@ -1,9 +1,9 @@
-package com.example.coolweather.service;
+package com.example.coolWeather.service;
 
-import com.example.coolweather.receive.WeatherReceiver;
-import com.example.coolweather.util.HttpCallbackListener;
-import com.example.coolweather.util.HttpUtil;
-import com.example.coolweather.util.Utility;
+import com.example.coolWeather.receive.WeatherReceiver;
+import com.example.coolWeather.util.HttpCallbackListener;
+import com.example.coolWeather.util.HttpUtil;
+import com.example.coolWeather.util.Utility;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
@@ -36,7 +36,7 @@ public class AutoUpdateService extends Service {
 		
 		Intent i = new Intent(this, WeatherReceiver.class);
 		PendingIntent pi = PendingIntent.getBroadcast(this, 0, i, 0);		
-		long triggerAtMillis = SystemClock.elapsedRealtime() + 10 * 1000;
+		long triggerAtMillis = SystemClock.elapsedRealtime() + 8*24*60 * 1000;
 		AlarmManager manager = (AlarmManager) getSystemService(ALARM_SERVICE);
 		manager.set(TRIM_MEMORY_RUNNING_CRITICAL, triggerAtMillis, pi);		
 		return super.onStartCommand(intent, flags, startId);
@@ -48,9 +48,9 @@ public class AutoUpdateService extends Service {
 		String address = "http://api.k780.com:88/?app=weather.today&weaid="+ weatherCode +"&appkey=10003&sign=b59bc3ef6191eb9f747dd4e83c99f2a4&format=json";				
 		HttpUtil.sendHttpRequest(address, new HttpCallbackListener() {			
 			@Override
-			public void onFinish(String response) {
+			public void onFinish(Object response) {
 				// TODO Auto-generated method stub
-				Utility.handleWeatherResponse(AutoUpdateService.this, response);
+				Utility.handleWeatherResponse(AutoUpdateService.this, (String)response);
 			}
 			
 			@Override

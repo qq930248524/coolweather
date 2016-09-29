@@ -1,4 +1,4 @@
-package com.example.coolweather.db;
+package com.example.coolWeather.db;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
@@ -21,6 +21,16 @@ public class CoolWeatherOpenHelper extends SQLiteOpenHelper {
 			+ "county_name text,"
 			+ "county_code text,"
 			+ "city_id integer)";
+	public static final String CREATE_STAR_COUNTY = "create table StarCounty("
+			+ "id integer primary key autoincrement,"
+			+ "county_name text,"
+			+ "county_code text,"
+			+ "weather_code text,"
+			+ "temp_low text,"
+			+ "temp_height text,"
+			+ "weather text,"
+			+ "days text)";
+
 	
 	public CoolWeatherOpenHelper(Context context, String name, CursorFactory factory, int version) {
 		super(context, name, factory, version);
@@ -33,11 +43,16 @@ public class CoolWeatherOpenHelper extends SQLiteOpenHelper {
 		db.execSQL(CREATE_PROVINCE);
 		db.execSQL(CREATE_CITY);
 		db.execSQL(CREATE_COUNTY);
+		db.execSQL(CREATE_STAR_COUNTY);
 	}
 
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 		// TODO Auto-generated method stub
+		db.execSQL("drop table if exists Province");
+		db.execSQL("drop table if exists City");
+		db.execSQL("drop table if exists County");
+		onCreate(db);
 
 	}
 

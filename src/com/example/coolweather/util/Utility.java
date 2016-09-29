@@ -1,16 +1,18 @@
-package com.example.coolweather.util;
+package com.example.coolWeather.util;
 
 import java.sql.Date;
 import java.text.SimpleDateFormat;
+import java.util.List;
 import java.util.Locale;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.example.coolweather.db.CoolWeatherDB;
-import com.example.coolweather.model.City;
-import com.example.coolweather.model.County;
-import com.example.coolweather.model.Province;
+import com.example.coolWeather.db.CoolWeatherDB;
+import com.example.coolWeather.model.City;
+import com.example.coolWeather.model.County;
+import com.example.coolWeather.model.Province;
+import com.example.coolWeather.model.StarCounty;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -55,6 +57,7 @@ public class Utility {
 		editor.putString("current_date", sdf.format(new Date(System.currentTimeMillis())));
 		editor.commit();
 	}
+	
 	
 	//detail province
 	public synchronized static boolean handleProvinceResponse(CoolWeatherDB coolWeatherDB, String response){
@@ -112,5 +115,6 @@ public class Utility {
 		}
 		return false;
 	}
+	
 
 }

@@ -1,6 +1,6 @@
-package com.example.coolweather.receive;
+package com.example.coolWeather.receive;
 
-import com.example.coolweather.service.AutoUpdateService;
+import com.example.coolWeather.service.AutoUpdateService;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -12,7 +12,7 @@ public class WeatherReceiver extends BroadcastReceiver {
 	public void onReceive(Context arg0, Intent arg1) {
 		// TODO Auto-generated method stub
 		Intent intent = new Intent(arg0, AutoUpdateService.class);
-		//sarg0.startActivity(intent);
+		arg0.startActivity(intent);
 	}
 
 }

@@ -1,4 +1,4 @@
-package com.example.coolweather.model;
+package com.example.coolWeather.model;
 
 public class City {
 	private int id;

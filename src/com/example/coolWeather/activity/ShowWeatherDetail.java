@@ -1,27 +1,23 @@
-package com.example.coolweather.activity;
+package com.example.coolWeather.activity;
 
-import com.example.coolweather.R;
-import com.example.coolweather.service.AutoUpdateService;
-import com.example.coolweather.util.HttpCallbackListener;
-import com.example.coolweather.util.HttpUtil;
-import com.example.coolweather.util.Utility;
+import com.example.coolWeather.service.AutoUpdateService;
+import com.example.coolWeather.util.HttpCallbackListener;
+import com.example.coolWeather.util.HttpUtil;
+import com.example.coolWeather.util.Utility;
+import com.example.greattest.R;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
-import android.text.style.UpdateAppearance;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-public class WeatherActivity extends Activity implements OnClickListener{
-	
+public class ShowWeatherDetail extends RootActivity {
 	private Button btnSwitchCity;
 	private Button btnRefreshWeather;
 	private LinearLayout layoutWeatherInfo;
@@ -35,16 +31,21 @@ public class WeatherActivity extends Activity implements OnClickListener{
 	public HttpCallbackListener weatherInfoListener;
 	
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
+	public void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
-		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
-		setContentView(R.layout.weather_layout);
+		super.onCreate(savedInstanceState);
 		
-		initView();
-		functionRun();
+		showWeatherList();
+		showWeatherDetail();
+		//setContentView(R.layout.activity_show_weather);
+		//initView();
+		//functionRun();
 	}
 	
+	private void showWeatherList(){}
+	private void showWeatherDetail(){}
+
 	private void initView(){
 		btnSwitchCity = (Button) findViewById(R.id.btn_switchCity);
 		btnSwitchCity.setOnClickListener(this);
@@ -61,7 +62,8 @@ public class WeatherActivity extends Activity implements OnClickListener{
 		//Http处理天气代号回调函数
 		weatherCodeListener = new HttpCallbackListener() {		
 			@Override
-			public void onFinish(String response) {
+			public void onFinish(Object	res) {
+				String response = (String)res;
 				// TODO Auto-generated method stub	
 				if(!TextUtils.isEmpty(response)){
 					String[] array = response.split("\\|");
@@ -81,9 +83,9 @@ public class WeatherActivity extends Activity implements OnClickListener{
 		//Http处理天气信息回调函数
 		weatherInfoListener = new HttpCallbackListener() {			
 			@Override
-			public void onFinish(String response) {
+			public void onFinish(Object response) {
 				// TODO Auto-generated method stub	
-				Utility.handleWeatherResponse(WeatherActivity.this, response);
+				Utility.handleWeatherResponse(ShowWeatherDetail.this, (String)response);
 				runOnUiThread(new Runnable(){
 					public void run(){
 						showWeather();
@@ -143,7 +145,7 @@ public class WeatherActivity extends Activity implements OnClickListener{
 				}
 				break;
 			case R.id.btn_switchCity:
-				Intent intent = new Intent(this, ChooseAreaActivity.class);
+				Intent intent = new Intent(this, ManageCounty.class);
 				intent.putExtra("is_weather_return", true);
 				startActivity(intent);
 				finish();
@@ -151,4 +153,5 @@ public class WeatherActivity extends Activity implements OnClickListener{
 		}
 	}
 	
+
 }
