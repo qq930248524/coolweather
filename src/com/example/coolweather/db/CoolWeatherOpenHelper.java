@@ -29,7 +29,8 @@ public class CoolWeatherOpenHelper extends SQLiteOpenHelper {
 			+ "temp_low text,"
 			+ "temp_height text,"
 			+ "weather text,"
-			+ "days text)";
+			+ "publish_time text,"
+			+ "get_time text)";
 
 	
 	public CoolWeatherOpenHelper(Context context, String name, CursorFactory factory, int version) {

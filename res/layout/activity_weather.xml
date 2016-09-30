@@ -1,46 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical" >
+    android:layout_height="match_parent" >
 
-    <FrameLayout
-        android:id="@+id/id_title_layout"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent" >
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
 
         <Button
             android:id="@+id/btn_fun"
             android:layout_width="30dp"
             android:layout_height="50dp"
-            android:layout_gravity="left"
-            android:layout_margin="10dp" />
-
-        <TextView
-            android:id="@+id/text_county"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
+            android:layout_gravity="start"
             android:layout_margin="10dp" />
 
         <Button
             android:id="@+id/btn_share"
-            android:layout_width="wrap_content"
+            android:layout_width="50dp"
             android:layout_height="50dp"
-            android:layout_gravity="right"
+            android:layout_gravity="end"
             android:layout_margin="10dp" />
-    </FrameLayout>
+    </LinearLayout>
 
-    <FrameLayout
-        android:id="@+id/id_main_layout"
+    <LinearLayout
+        android:id="@+id/id_content_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent" >
-
         <android.support.v4.view.ViewPager
-            android:id="@+id/id_viewpager"
+            android:id="@+id/viewpager"
             android:layout_width="fill_parent"
-            android:layout_height="fill_parent">
+            android:layout_height="0dp"
+            android:layout_weight="9" >
         </android.support.v4.view.ViewPager>
-    </FrameLayout>
+        <LinearLayout 
+            android:id="@+id/id_point_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:orientation="horizontal">            
+        </LinearLayout>
+    </LinearLayout>
 
-</LinearLayout>
+</FrameLayout>

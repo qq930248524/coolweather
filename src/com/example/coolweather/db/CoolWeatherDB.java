@@ -130,7 +130,8 @@ public class CoolWeatherDB {
 			values.put("weather_code", starCounty.weather_code);
 			values.put("county_code", starCounty.county_code);
 			values.put("county_name", starCounty.county_name);
-			values.put("days", starCounty.days);
+			values.put("publish_time", starCounty.get_time);
+			values.put("get_time", starCounty.publish_time);
 			values.put("temp_heigth", starCounty.temp_height);
 			values.put("temp_low", starCounty.temp_low);
 			values.put("weather", starCounty.weather);
@@ -142,20 +143,21 @@ public class CoolWeatherDB {
 			db.delete("StarCounty", "weather_code = ?", new String[]{String.valueOf(starCounty.weather_code)});
 		}
 	}
-	public List<StarCounty> loadStarCountyList(){
-		List<StarCounty> list = new ArrayList<StarCounty>();
+	public ArrayList<StarCounty> loadStarCountyList(){
+		ArrayList<StarCounty> list = new ArrayList<StarCounty>();
 		Cursor cursor = db.query("StarCounty", null, null, null, null, null, null);
 		if(cursor.moveToFirst()){
 			do{
 				StarCounty starCounty =  new StarCounty();
 				
-				starCounty.setCounty_code	(cursor.getString(cursor.getColumnIndex("county_code")));
-				starCounty.setCounty_name	(cursor.getString(cursor.getColumnIndex("county_name")));
-				starCounty.setDays			(cursor.getString(cursor.getColumnIndex("days")));
-				starCounty.setTemp_height	(cursor.getString(cursor.getColumnIndex("temp_height")));
-				starCounty.setTemp_low		(cursor.getString(cursor.getColumnIndex("temp_low")));
-				starCounty.setWeather		(cursor.getString(cursor.getColumnIndex("weather")));
-				starCounty.setWeather_code	(cursor.getString(cursor.getColumnIndex("weather_code")));
+				starCounty.county_code =	(cursor.getString(cursor.getColumnIndex("county_code")));
+				starCounty.county_name = 	(cursor.getString(cursor.getColumnIndex("county_name")));
+				starCounty.get_time =		(cursor.getString(cursor.getColumnIndex("get_time")));
+				starCounty.publish_time = 	(cursor.getString(cursor.getColumnIndex("publish_time")));
+				starCounty.temp_height =	(cursor.getString(cursor.getColumnIndex("temp_height")));
+				starCounty.temp_low =		(cursor.getString(cursor.getColumnIndex("temp_low")));
+				starCounty.weather =		(cursor.getString(cursor.getColumnIndex("weather")));
+				starCounty.weather_code =	(cursor.getString(cursor.getColumnIndex("weather_code")));
 				
 				list.add(starCounty);
 			}while(cursor.moveToNext());
