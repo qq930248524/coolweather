@@ -132,7 +132,7 @@ public class CoolWeatherDB {
 			values.put("county_name", starCounty.county_name);
 			values.put("publish_time", starCounty.get_time);
 			values.put("get_time", starCounty.publish_time);
-			values.put("temp_heigth", starCounty.temp_height);
+			values.put("temp_height", starCounty.temp_height);
 			values.put("temp_low", starCounty.temp_low);
 			values.put("weather", starCounty.weather);
 			db.insert("StarCounty", null, values);
