@@ -47,10 +47,6 @@ public class ShowWeatherDetail extends RootActivity {
 	private void showWeatherDetail(){}
 
 	private void initView(){
-		btnSwitchCity = (Button) findViewById(R.id.btn_switchCity);
-		btnSwitchCity.setOnClickListener(this);
-		btnRefreshWeather = (Button) findViewById(R.id.btn_refreshWeather);
-		btnRefreshWeather.setOnClickListener(this);
 		
 		layoutWeatherInfo = (LinearLayout) findViewById(R.id.weather_info_layout);
 		textCityName = (TextView) findViewById(R.id.city_name);
@@ -136,21 +132,6 @@ public class ShowWeatherDetail extends RootActivity {
 	
 	@Override
 	public void onClick(View v) {
-		switch(v.getId()){
-			case R.id.btn_refreshWeather:
-				SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
-				String countyCode = preferences.getString("countyCode", "");
-				if(!TextUtils.isEmpty(countyCode)){
-					queryWeather(countyCode);
-				}
-				break;
-			case R.id.btn_switchCity:
-				Intent intent = new Intent(this, ManageCounty.class);
-				intent.putExtra("is_weather_return", true);
-				startActivity(intent);
-				finish();
-				break;
-		}
 	}
 	
 

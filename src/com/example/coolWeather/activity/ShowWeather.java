@@ -28,8 +28,7 @@ public class ShowWeather extends RootActivity implements OnClickListener{
 	private ViewPager viewPaper ;
 	private MyPagerAdapter adapter;
 	private ArrayList<View> viewList;
-	private ArrayList<StarCounty> starList;
-	
+	private ArrayList<StarCounty> starList;	
 	private ArrayList<ImageView> pointList;
 	
 	@Override
@@ -55,7 +54,7 @@ public class ShowWeather extends RootActivity implements OnClickListener{
 
 	private void initView(){
 		findViewById(R.id.btn_fun).setOnClickListener(this);
-		findViewById(R.id.btn_share).setOnClickListener(this);;
+		findViewById(R.id.btn_share).setOnClickListener(this);
 		
 		//初始化viewPager
 		viewPaper = (ViewPager) findViewById(R.id.viewpager);
@@ -87,15 +86,16 @@ public class ShowWeather extends RootActivity implements OnClickListener{
 	}
 	private ArrayList<View> inflatViewList(ArrayList<StarCounty> starList){
 		ArrayList<View> viewList = new ArrayList<View>();
+		
 		for(StarCounty starCounty: starList){
-			View view = LayoutInflater.from(this).inflate(R.layout.activity_show_weather, null);
+			View view = getLayoutInflater().inflate(R.layout.activity_show_weather, null);
 			((TextView) view.findViewById(R.id.text_publish)).setText(starCounty.publish_time);
 			((TextView) view.findViewById(R.id.text_date)).setText(starCounty.get_time);
 			((TextView) view.findViewById(R.id.view_temp1)).setText(starCounty.temp_low);
 			((TextView) view.findViewById(R.id.view_temp2)).setText(starCounty.temp_height);
 			((TextView) view.findViewById(R.id.text_weather)).setText(starCounty.weather);			
 			viewList.add(view);
-		}
+		}		
 			
 		return viewList;
 	}

@@ -6,6 +6,7 @@ import java.util.List;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.View;
+import android.view.ViewGroup;
 
 public class MyPagerAdapter extends PagerAdapter {
 	public ArrayList<View> viewList;
@@ -26,9 +27,9 @@ public class MyPagerAdapter extends PagerAdapter {
 	}
 
 	@Override
-	public Object instantiateItem(View container, int position) {
+	public Object instantiateItem(ViewGroup container, int position) {
 		// TODO Auto-generated method stub
-		((ViewPager)container).addView(viewList.get(position), 0);
+		(container).addView(viewList.get(position));
 		return viewList.get(position);
 	}
 
