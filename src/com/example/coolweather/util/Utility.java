@@ -2,6 +2,7 @@ package com.example.coolWeather.util;
 
 import java.sql.Date;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -14,6 +15,7 @@ import com.example.coolWeather.model.County;
 import com.example.coolWeather.model.Province;
 import com.example.coolWeather.model.StarCounty;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
@@ -21,41 +23,32 @@ import android.text.TextUtils;
 
 
 public class Utility {
-	public static void handleWeatherResponse(Context context, String response){
+	public static void handleWeatherResponse(CoolWeatherDB coolWeatherDB, StarCounty starCounty, String response){
 		try {
 			System.out.println("========response:" + response);
-			JSONObject weatherInfo = new JSONObject(response).getJSONObject("result");
-			String cityName = weatherInfo.getString("citynm");
-			String weatherCode = weatherInfo.getString("cityid");
-			String temp1 = weatherInfo.getString("temp_low");
-			String temp2 = weatherInfo.getString("temp_high");
-			String weatherDesp = weatherInfo.getString("weather");
-			String publishTime = weatherInfo.getString("days");
-			saveWeatherInfo(context, cityName, weatherCode, temp1, temp2, weatherDesp, publishTime);
+			JSONObject weatherInfo 	= new JSONObject(response).getJSONObject("result");
+			starCounty.county_name 	= weatherInfo.getString("citynm");
+			starCounty.weather_code 	= weatherInfo.getString("cityid");
+			starCounty.temp_low		= weatherInfo.getString("temp_low");
+			starCounty.temp_height	= weatherInfo.getString("temp_high");
+			starCounty.weather		= weatherInfo.getString("weather");
+			starCounty.publish_time	= weatherInfo.getString("days");
+			long currentTime = System.currentTimeMillis();
+			SimpleDateFormat format = new SimpleDateFormat("yy年MM月dd日--HH时mm分ss秒");
+			Date date = new Date(currentTime);
+			starCounty.get_time 		= format.format(date);
+			
+			//更新数据库中StarCounty的元素
+			coolWeatherDB.removeStarCounty(starCounty);
+			coolWeatherDB.saveStarCounty(starCounty);
+			
+			//更新数组中需要更新的元素
+			
+			
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-	}
-	private static void saveWeatherInfo(Context context, 
-			String cityName, 
-			String weatherCode, 
-			String temp1, 
-			String temp2, 
-			String weatherDesp, 
-			String publishTime){
-		
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy年M月d日 H时M分", Locale.CHINA);
-		SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(context).edit();
-		editor.putBoolean("city_selected", true);
-		editor.putString("city_name", cityName);
-		editor.putString("weather_code", weatherCode);
-		editor.putString("temp1", temp1);
-		editor.putString("temp2", temp2);
-		editor.putString("weather_desp", weatherDesp);
-		editor.putString("publish_time", publishTime);
-		editor.putString("current_date", sdf.format(new Date(System.currentTimeMillis())));
-		editor.commit();
 	}
 	
 	

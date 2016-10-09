@@ -1,7 +1,6 @@
 package com.example.coolWeather.adapter;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -10,7 +9,6 @@ import android.view.ViewGroup;
 
 public class MyPagerAdapter extends PagerAdapter {
 	public ArrayList<View> viewList;
-
 
 	public MyPagerAdapter(ArrayList<View> viewList) {
 		// TODO Auto-generated constructor stub
@@ -29,14 +27,22 @@ public class MyPagerAdapter extends PagerAdapter {
 	@Override
 	public Object instantiateItem(ViewGroup container, int position) {
 		// TODO Auto-generated method stub
-		(container).addView(viewList.get(position));
-		return viewList.get(position);
+		
+		View view = viewList.get(position);
+		view.setTag(position);
+		container.addView(view);
+		return view;
 	}
 
+	@Override
+	public int getItemPosition(Object object) {
+		// TODO Auto-generated method stub
+		return POSITION_NONE;
+	}
 	//销毁position位置的界面
 	@Override
-	public void destroyItem(View view, int position, Object arg2) {
-		((ViewPager) view).removeView(viewList.get(position));       
+	public void destroyItem(ViewGroup view, int position, Object arg2) {
+		view.removeView(viewList.get(position));       
 	}
 
 	@Override

@@ -9,9 +9,7 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="#27a5f9" 
-        >
+        android:layout_height="match_parent">
 
         <TextView
             android:id="@+id/text_publish"
@@ -30,6 +28,13 @@
             android:layout_centerInParent="true"
             android:orientation="vertical" >
 
+            <TextView 
+                android:id="@+id/text_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:textSize="25dp"/>
+            
             <TextView
                 android:id="@+id/text_date"
                 android:layout_width="wrap_content"

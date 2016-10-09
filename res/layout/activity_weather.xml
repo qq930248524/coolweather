@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+    android:layout_height="match_parent"
+    android:background="#27a5f9"
+    android:orientation="vertical" >
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal" >
@@ -12,16 +14,16 @@
             android:id="@+id/btn_fun"
             android:layout_width="30dp"
             android:layout_height="50dp"
-            android:layout_gravity="start"
-            android:layout_margin="10dp" />
+            android:layout_alignParentLeft="true"
+            android:text="1" />
 
         <Button
             android:id="@+id/btn_share"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:layout_gravity="end"
-            android:layout_margin="10dp" />
-    </LinearLayout>
+            android:layout_alignParentRight="true"
+            android:text="2" />
+    </RelativeLayout>
 
     <LinearLayout
         android:id="@+id/id_content_layout"
@@ -43,4 +45,4 @@
         </LinearLayout>
     </LinearLayout>
 
-</FrameLayout>
+</LinearLayout>
