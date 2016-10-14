@@ -14,41 +14,31 @@ import com.example.coolWeather.model.City;
 import com.example.coolWeather.model.County;
 import com.example.coolWeather.model.Province;
 import com.example.coolWeather.model.StarCounty;
+import com.example.coolWeather.model.StarWeather;
+import com.google.gson.Gson;
 
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.database.CursorJoiner.Result;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
 
 
 public class Utility {
 	public static void handleWeatherResponse(CoolWeatherDB coolWeatherDB, StarCounty starCounty, String response){
-		try {
-			System.out.println("========response:" + response);
-			JSONObject weatherInfo 	= new JSONObject(response).getJSONObject("result");
-			starCounty.county_name 	= weatherInfo.getString("citynm");
-			starCounty.weather_code 	= weatherInfo.getString("cityid");
-			starCounty.temp_low		= weatherInfo.getString("temp_low");
-			starCounty.temp_height	= weatherInfo.getString("temp_high");
-			starCounty.weather		= weatherInfo.getString("weather");
-			starCounty.publish_time	= weatherInfo.getString("days");
-			long currentTime = System.currentTimeMillis();
-			SimpleDateFormat format = new SimpleDateFormat("yy年MM月dd日--HH时mm分ss秒");
-			Date date = new Date(currentTime);
-			starCounty.get_time 		= format.format(date);
-			
-			//更新数据库中StarCounty的元素
-			coolWeatherDB.removeStarCounty(starCounty);
-			coolWeatherDB.saveStarCounty(starCounty);
-			
-			//更新数组中需要更新的元素
-			
-			
-		} catch (JSONException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		System.out.println("========response:" + response);
+//			JSONObject weatherInfo 	= new JSONObject(response).getJSONObject("result");
+//			long currentTime = System.currentTimeMillis();
+//			SimpleDateFormat format = new SimpleDateFormat("yy年MM月dd日--HH时mm分ss秒");
+//			Date date = new Date(currentTime);
+//			starCounty.get_time 		= format.format(date);
+		
+		starCounty.weather = new Gson().fromJson(response, StarWeather.Weather.class);
+		
+		//更新数据库中StarCounty的元素
+		coolWeatherDB.removeStarCounty(starCounty);
+		coolWeatherDB.saveStarCounty(starCounty);
 	}
 	
 	

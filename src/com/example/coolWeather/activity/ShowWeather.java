@@ -12,6 +12,8 @@ import com.example.coolWeather.util.HttpUtil;
 import com.example.coolWeather.util.Utility;
 import com.example.greattest.R;
 
+import android.R.color;
+import android.R.menu;
 import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -22,6 +24,8 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.LinearLayout.LayoutParams;
+import cn.sharesdk.framework.ShareSDK;
 import android.widget.TextView;
 
 public class ShowWeather extends RootActivity implements OnClickListener{
@@ -42,6 +46,8 @@ public class ShowWeather extends RootActivity implements OnClickListener{
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_weather);
+		//初始化shareSDK，用户微信分享
+		ShareSDK.initSDK(getApplicationContext(), "17c8e1454cf40");
 		initData();
 		initView();
 	}
@@ -59,8 +65,8 @@ public class ShowWeather extends RootActivity implements OnClickListener{
 	}
 
 	private void initView(){
-		findViewById(R.id.btn_fun).setOnClickListener(this);
-		findViewById(R.id.btn_share).setOnClickListener(this);
+		findViewById(R.id.btn_fun).setOnClickListener(clickListener);
+		findViewById(R.id.btn_share).setOnClickListener(clickListener);
 
 		//初始化viewPager
 		viewPager = (ViewPager) findViewById(R.id.viewpager);
@@ -70,58 +76,70 @@ public class ShowWeather extends RootActivity implements OnClickListener{
 			public void onPageSelected(int arg0) {
 				// TODO Auto-generated method stub
 				StarCounty tempStar = starList.get(arg0);
-				if(tempStar.weather == null){
+				if(tempStar.weather.weather == null){
 					startRefresh(tempStar);
 				}
+				setPointBright(arg0);
 			}
-
 			@Override
 			public void onPageScrolled(int arg0, float arg1, int arg2) {
 				// TODO Auto-generated method stub
-
 			}
-
 			@Override
 			public void onPageScrollStateChanged(int arg0) {
 				// TODO Auto-generated method stub
-
 			}
 		});
-
-
 		//初始化点点的线性布局
 		inflatPointList();
-
 		setPointBright(0);		
 	}
+	
+	OnClickListener clickListener = new OnClickListener() {		
+		@Override
+		public void onClick(View v) {
+			// TODO Auto-generated method stub
+			switch(v.getId()){
+			case R.id.btn_fun:
+				getSlidingMenu().showMenu();
+				break;
+			case R.id.btn_share:
+				break;
+			}
+		}
+	};
 
 	private void setPointBright(int position){
 		for(int i=0; i<starList.size(); i++){
-			pointList.get(i).setEnabled(true);
+			pointList.get(i).setEnabled(false);
 		}
-		pointList.get(position).setEnabled(false);
+		pointList.get(position).setEnabled(true);
 	}
 
 	private void inflatPointList(){
 		LinearLayout pointLayout = (LinearLayout) findViewById(R.id.id_point_layout);
 		pointList = new ArrayList<ImageView>();
 		for(int i=0; i < starList.size(); i++){
-			ImageView pointView = (ImageView)LayoutInflater.from(this).inflate(R.layout.point, null);
+			ImageView pointView = (ImageView)getLayoutInflater().inflate(R.layout.point, null);
+			LinearLayout.LayoutParams p = new LinearLayout.LayoutParams(
+					LinearLayout.LayoutParams.WRAP_CONTENT,
+					LinearLayout.LayoutParams.WRAP_CONTENT);
+			p.setMargins(0, 0, 0, 10);
 			pointView.setEnabled(true);
 			pointList.add(pointView);
-			pointLayout.addView(pointView);
+			pointLayout.addView(pointView, p);
 		}
 	}
 	private ArrayList<View> inflatViewList(ArrayList<StarCounty> starList){
 		ArrayList<View> viewList = new ArrayList<View>();		
 		for(StarCounty starCounty: starList){
 			View view = getLayoutInflater().inflate(R.layout.activity_show_weather, null);
-			((TextView) view.findViewById(R.id.text_publish)).setText(starCounty.publish_time);
-			((TextView) view.findViewById(R.id.text_date)).setText(starCounty.get_time);
-			((TextView) view.findViewById(R.id.view_temp1)).setText(starCounty.temp_low);
-			((TextView) view.findViewById(R.id.view_temp2)).setText(starCounty.temp_height);
-			((TextView) view.findViewById(R.id.text_weather)).setText(starCounty.weather);			
-			((TextView) view.findViewById(R.id.text_name)).setText(starCounty.county_name);			
+			((TextView) view.findViewById(R.id.text_publish)).	setText(starCounty.weather.updateTime);
+			((TextView) view.findViewById(R.id.text_date)).		setText(starCounty.weather.time);
+			((TextView) view.findViewById(R.id.view_temp1)).	setText(starCounty.weather.temperature);
+			((TextView) view.findViewById(R.id.view_temp2)).	setText(starCounty.weather.temperature);
+			((TextView) view.findViewById(R.id.text_weather)).	setText(starCounty.weather.weather);			
+			((TextView) view.findViewById(R.id.text_name)).		setText(starCounty.weather.distrct);			
 			viewList.add(view);
 		}			
 		return viewList;
@@ -146,9 +164,11 @@ public class ShowWeather extends RootActivity implements OnClickListener{
 			progressDialog.show();
 		}
 
-		String address = "http://api.k780.com:88/?app=weather.today&weaid="+ 
-				starCounty.weather_code +
-				"&appkey=10003&sign=b59bc3ef6191eb9f747dd4e83c99f2a4&format=json";				
+//		String address = "http://apicloud.mob.com/v1/weather/query?key=17cbd753c5b5f&city="+
+//				starCounty.weather.distrct+"&province="+starCounty.weather.city;
+		
+		String address = "http://apicloud.mob.com/v1/weather/query?key=17cbd753c5b5f&city=上海&province=上海";
+		System.out.println("==========address:" + address);
 		HttpUtil.sendHttpRequest(address, new HttpCallbackListener() {			
 			@Override
 			public void onFinish(Object response) {
@@ -178,12 +198,12 @@ public class ShowWeather extends RootActivity implements OnClickListener{
 		});
 	}
 	public void updateView(View view, StarCounty starCounty){
-		((android.widget.TextView)view.findViewById(R.id.view_temp1)).setText(starCounty.temp_low);
-		((android.widget.TextView)view.findViewById(R.id.view_temp2)).setText(starCounty.temp_height);
-		((android.widget.TextView)view.findViewById(R.id.text_weather)).setText(starCounty.weather);
-		((android.widget.TextView)view.findViewById(R.id.text_publish)).setText(starCounty.publish_time);
-		((android.widget.TextView)view.findViewById(R.id.text_date)).setText(starCounty.get_time);
-		((android.widget.TextView)view.findViewById(R.id.text_name)).setText(starCounty.county_name);		
+		((android.widget.TextView)view.findViewById(R.id.view_temp1)).	setText(starCounty.weather.temperature);
+		((android.widget.TextView)view.findViewById(R.id.view_temp2)).	setText(starCounty.weather.temperature);
+		((android.widget.TextView)view.findViewById(R.id.text_weather)).setText(starCounty.weather.weather);
+		((android.widget.TextView)view.findViewById(R.id.text_publish)).setText(starCounty.weather.updateTime);
+		((android.widget.TextView)view.findViewById(R.id.text_date)).	setText(starCounty.weather.time);
+		((android.widget.TextView)view.findViewById(R.id.text_name)).	setText(starCounty.weather.weather);		
 	}
 
 	private void endRefreshList(){
@@ -192,18 +212,5 @@ public class ShowWeather extends RootActivity implements OnClickListener{
 		}
 	}
 
-	@Override
-	public void onClick(View v) {
-		// TODO Auto-generated method stub
-		switch(v.getId()){
-		case R.id.btn_fun:
-			getSlidingMenu().showMenu();
-			break;
-		case R.id.btn_share:
-			break;
-		default:
-			break;
-		}
-	}
 
 }

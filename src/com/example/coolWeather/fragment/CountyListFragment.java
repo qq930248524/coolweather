@@ -63,6 +63,7 @@ public class CountyListFragment extends Fragment {
 		// TODO Auto-generated method stub
 		myself = inflater.inflate(R.layout.fragment_area_choose, null);
 		initView();
+		//显示查询省
 		queryProvince();
 		return myself;
 	}
@@ -109,6 +110,10 @@ public class CountyListFragment extends Fragment {
 		progressDialog.setCanceledOnTouchOutside(false);
 	}
 	
+	/****************************
+	 * 查询省份信息列表
+	 *  
+	 *********************/
 	private void queryProvince(){
 		provinceList = coolWeatherDB.loadProvinces();
 		if(provinceList.size() > 0){
@@ -124,6 +129,10 @@ public class CountyListFragment extends Fragment {
 		}
 	}
 	
+	/************************ 
+	 * 查询城市信息列表
+	 * 
+	 *********************/
 	private void queryCity(){
 		cityList = coolWeatherDB.loadCities(selectedProvince.getId());
 		if(cityList.size() > 0){
@@ -138,6 +147,10 @@ public class CountyListFragment extends Fragment {
 			queryFromServer(selectedProvince.getProvinceCode());
 		}
 	}
+	/**********************
+	 * 查询区县信息列表
+	 * 
+	 */
 	private void queryCounty(){
 		countyList = coolWeatherDB.loadCounty(selectedCity.getId());
 		if(countyList.size() > 0){
@@ -156,6 +169,10 @@ public class CountyListFragment extends Fragment {
 		queryFromServer(selectedCounty.getCountyCode());
 	}
 	
+	/***************** 
+	 * 根据地区编号，从服务器获取数据
+	 * @param code 地区编号
+	 */
 	private void queryFromServer(String code){
 		String address;
 		if(!TextUtils.isEmpty(code)){
@@ -168,6 +185,9 @@ public class CountyListFragment extends Fragment {
 		HttpUtil.sendHttpRequest(address, httpCallback);
 	};
 	
+	/************************************************************
+	 * Http回调函数，通过不同的level，对response最不同的处理
+	 *************************************************************/
 	private HttpCallbackListener httpCallback = new HttpCallbackListener() {
 		
 		@Override
@@ -214,7 +234,12 @@ public class CountyListFragment extends Fragment {
 								break;			
 							case LEVEL_WEATHER:
 								if(!TextUtils.isEmpty(picCode)){
-									((ManageCounty) getActivity()).showGeography(picCode, selectedCounty.getCountyName());
+									ArrayList<String> name = new ArrayList<String>();
+									name.add(selectedProvince.getProvinceName());
+									name.add(selectedCity.getCityName());
+									name.add(selectedCounty.getCountyName());
+									name.add(picCode);
+									((ManageCounty) getActivity()).showGeography(name);
 								}
 								break;
 							default:
@@ -239,6 +264,9 @@ public class CountyListFragment extends Fragment {
 		}
 	};
 
+	/******************
+	 * 返回按键相应函数
+	 */
 	public void onBackPressed(){
 		System.out.println("================onBackPressed: currentLevel = " + currentLevel);
 		switch(currentLevel){

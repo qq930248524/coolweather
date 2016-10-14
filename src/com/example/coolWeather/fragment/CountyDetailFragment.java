@@ -1,6 +1,7 @@
 package com.example.coolWeather.fragment;
 
 import java.sql.SQLClientInfoException;
+import java.util.ArrayList;
 import java.util.List;
 
 import com.example.coolWeather.activity.ManageCounty;
@@ -25,19 +26,31 @@ import android.widget.TextView;
 
 public class CountyDetailFragment extends Fragment implements OnClickListener{
 	private View myself;	
-	private String weatherCode;
 	private Boolean STAR_FLAG;
+	private ArrayList<String> name;
 	private CoolWeatherDB coolWeatherDb;
 	
 	//view
 	private Button btnCollect;
 	private TextView textGeoraphy;
-	private String titleName;
 	
-	public CountyDetailFragment(String weatherCode, String picName) {
+	private static final int PROVINCE 	= 0;
+	private static final int CITY 		= 1;
+	private static final int COUNTY 	= 2;
+	private static final int WEATHER_CODE= 3;
+	
+	
+	/***********************************
+	 * county详细信息碎片的构造函数
+	 * @param name 装有城市详细名字的list
+	 * 				list0=provinceName	
+	 * 				list1=cityName
+	 * 				list2=contyName
+	 * 				list3=weatherCode
+	 ***********************************/
+	public CountyDetailFragment(ArrayList<String> name) {
 		// TODO Auto-generated constructor stub
-		this.weatherCode = weatherCode;
-		this.titleName = picName;
+		this.name = name;
 	}
 	
 	@Override
@@ -70,9 +83,9 @@ public class CountyDetailFragment extends Fragment implements OnClickListener{
 	}
 	
 	void initView(){
-		STAR_FLAG = coolWeatherDb.isStarCounty(weatherCode);
+		STAR_FLAG = coolWeatherDb.isStarCounty(name.get(WEATHER_CODE));
 		textGeoraphy = (TextView) myself.findViewById(R.id.city_name);
-		textGeoraphy.setText(titleName);
+		textGeoraphy.setText(name.get(COUNTY));
 		myself.findViewById(R.id.btn_back).setOnClickListener(this);
 		btnCollect = (Button) myself.findViewById(R.id.btn_collect);
 		btnCollect.setOnClickListener(this);
@@ -80,7 +93,7 @@ public class CountyDetailFragment extends Fragment implements OnClickListener{
 	}
 	
 	void initData(){
-		String address = "http://poster.weather.com.cn/p_files/base/" + weatherCode + ".jpg";
+		String address = "http://poster.weather.com.cn/p_files/base/" + name.get(WEATHER_CODE) + ".jpg";
 		HttpUtil.sendHttpRequestBitmap(address, new HttpCallbackListener() {			
 			@Override
 			public void onFinish(final Object response) {
@@ -96,15 +109,17 @@ public class CountyDetailFragment extends Fragment implements OnClickListener{
 			
 			@Override
 			public void onError(Exception e) {
-				// TODO Auto-generated method stub
-				
+				// TODO Auto-generated method stub				
 			}
 		});
 	}
 	private void saveData(){
 		StarCounty starCounty = new StarCounty();
-		starCounty.weather_code = weatherCode;
-		starCounty.county_name = titleName;
+		starCounty.weather_code 	= name.get(WEATHER_CODE);
+		starCounty.weather.province = name.get(PROVINCE);
+		starCounty.weather.city		= name.get(CITY);
+		starCounty.weather.distrct	= name.get(COUNTY);
+		
 		if(STAR_FLAG){
 			coolWeatherDb.saveStarCounty(starCounty);
 		}else{

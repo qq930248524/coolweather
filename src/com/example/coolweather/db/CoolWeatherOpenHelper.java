@@ -23,14 +23,26 @@ public class CoolWeatherOpenHelper extends SQLiteOpenHelper {
 			+ "city_id integer)";
 	public static final String CREATE_STAR_COUNTY = "create table StarCounty("
 			+ "id integer primary key autoincrement,"
-			+ "county_name text,"
-			+ "county_code text,"
 			+ "weather_code text,"
-			+ "temp_low text,"
-			+ "temp_height text,"
+			+ "airCondition text,"
+			+ "city text,"
+			+ "coldIndex text,"
+			+ "date text,"
+			+ "distrct text,"
+			+ "dressingIndex text,"
+			+ "exerciseIndex text,"
+			+ "humidity text,"
+			+ "pollutionIndex text,"
+			+ "province text,"
+			+ "sunrise text,"
+			+ "sunset text,"
+			+ "temperature text,"
+			+ "time text,"
+			+ "updateTime text,"
+			+ "washIndex text,"
 			+ "weather text,"
-			+ "publish_time text,"
-			+ "get_time text)";
+			+ "weak text,"
+			+ "wind text)";
 
 	
 	public CoolWeatherOpenHelper(Context context, String name, CursorFactory factory, int version) {

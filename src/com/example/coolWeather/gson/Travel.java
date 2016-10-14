@@ -30,5 +30,4 @@ public class Travel {
 		String text;
 		Boolean elite;
 	}
-
 }

@@ -1,5 +1,7 @@
 package com.example.coolWeather.activity;
 
+import java.util.ArrayList;
+
 import com.example.coolWeather.fragment.CountyDetailFragment;
 import com.example.coolWeather.fragment.CountyListFragment;
 import com.example.greattest.R;
@@ -20,18 +22,29 @@ public class ManageCounty extends RootActivity {
 		showCoutyList();
 	}
 
+	/*****************************
+	 * 切换fragment为显示城市列表的fragment
+	 *****************************/
 	public void showCoutyList(){
 		Fragment showConty = new CountyListFragment();
 		FragmentTransaction transaction = getFragmentManager().beginTransaction();
 		transaction.replace(R.id.id_main_layout, showConty);
+		transaction.addToBackStack(null);
 		transaction.commit();
 	}
 	
-	public void showGeography(String picCode, String picName){
-		Fragment showGeoraphy = new CountyDetailFragment(picCode, picName);
+	/***********************************
+	 * 切换fragment为显示城市信息的碎片
+	 * @param name 装有城市详细名字的list
+	 * 				list0=provinceName	
+	 * 				list1=cityName
+	 * 				list2=contyName
+	 * 				list3=weatherCode
+	 ***********************************/
+	public void showGeography(ArrayList<String> name){
+		Fragment showGeoraphy = new CountyDetailFragment(name);
 		FragmentTransaction transaction = getFragmentManager().beginTransaction();
-		transaction.replace(R.id.id_main_layout, showGeoraphy);
-		transaction.addToBackStack(null);
+		transaction.replace(R.id.id_main_layout, showGeoraphy);		
 		transaction.commit();
 	}
 }
