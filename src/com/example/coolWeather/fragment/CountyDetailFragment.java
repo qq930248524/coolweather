@@ -116,9 +116,9 @@ public class CountyDetailFragment extends Fragment implements OnClickListener{
 	private void saveData(){
 		StarCounty starCounty = new StarCounty();
 		starCounty.weather_code 	= name.get(WEATHER_CODE);
-		starCounty.weather.province = name.get(PROVINCE);
-		starCounty.weather.city		= name.get(CITY);
-		starCounty.weather.distrct	= name.get(COUNTY);
+		starCounty.weather.getResult().get(0).setProvince(name.get(PROVINCE));
+		starCounty.weather.getResult().get(0).setCity(name.get(CITY));
+		starCounty.weather.getResult().get(0).setDistrct(name.get(COUNTY));
 		
 		if(STAR_FLAG){
 			coolWeatherDb.saveStarCounty(starCounty);

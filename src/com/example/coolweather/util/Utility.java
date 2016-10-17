@@ -34,7 +34,7 @@ public class Utility {
 //			Date date = new Date(currentTime);
 //			starCounty.get_time 		= format.format(date);
 		
-		starCounty.weather = new Gson().fromJson(response, StarWeather.Weather.class);
+		starCounty.weather = new Gson().fromJson(response, StarWeather.class);
 		
 		//更新数据库中StarCounty的元素
 		coolWeatherDB.removeStarCounty(starCounty);

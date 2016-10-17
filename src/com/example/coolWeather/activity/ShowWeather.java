@@ -1,12 +1,17 @@
 package com.example.coolWeather.activity;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
+
+import org.apache.http.client.utils.URLEncodedUtils;
 
 import com.example.coolWeather.adapter.MyPagerAdapter;
 import com.example.coolWeather.db.CoolWeatherDB;
 import com.example.coolWeather.fragment.WeatherFragment;
 import com.example.coolWeather.model.StarCounty;
+import com.example.coolWeather.model.StarWeather.ResultBean;
 import com.example.coolWeather.util.HttpCallbackListener;
 import com.example.coolWeather.util.HttpUtil;
 import com.example.coolWeather.util.Utility;
@@ -76,7 +81,7 @@ public class ShowWeather extends RootActivity implements OnClickListener{
 			public void onPageSelected(int arg0) {
 				// TODO Auto-generated method stub
 				StarCounty tempStar = starList.get(arg0);
-				if(tempStar.weather.weather == null){
+				if(tempStar.weather.getResult().get(0).getWeather() == null){
 					startRefresh(tempStar);
 				}
 				setPointBright(arg0);
@@ -134,12 +139,13 @@ public class ShowWeather extends RootActivity implements OnClickListener{
 		ArrayList<View> viewList = new ArrayList<View>();		
 		for(StarCounty starCounty: starList){
 			View view = getLayoutInflater().inflate(R.layout.activity_show_weather, null);
-			((TextView) view.findViewById(R.id.text_publish)).	setText(starCounty.weather.updateTime);
-			((TextView) view.findViewById(R.id.text_date)).		setText(starCounty.weather.time);
-			((TextView) view.findViewById(R.id.view_temp1)).	setText(starCounty.weather.temperature);
-			((TextView) view.findViewById(R.id.view_temp2)).	setText(starCounty.weather.temperature);
-			((TextView) view.findViewById(R.id.text_weather)).	setText(starCounty.weather.weather);			
-			((TextView) view.findViewById(R.id.text_name)).		setText(starCounty.weather.distrct);			
+			ResultBean result = starCounty.weather.getResult().get(0);
+			((TextView) view.findViewById(R.id.text_publish)).	setText(result.getUpdateTime());
+			((TextView) view.findViewById(R.id.text_date)).		setText(result.getTime());
+			((TextView) view.findViewById(R.id.view_temp1)).	setText(result.getTemperature());
+			((TextView) view.findViewById(R.id.view_temp2)).	setText(result.getTemperature());
+			((TextView) view.findViewById(R.id.text_weather)).	setText(result.getWeather());			
+			((TextView) view.findViewById(R.id.text_name)).		setText(result.getDistrct());			
 			viewList.add(view);
 		}			
 		return viewList;
@@ -164,11 +170,16 @@ public class ShowWeather extends RootActivity implements OnClickListener{
 			progressDialog.show();
 		}
 
-//		String address = "http://apicloud.mob.com/v1/weather/query?key=17cbd753c5b5f&city="+
-//				starCounty.weather.distrct+"&province="+starCounty.weather.city;
+		String address = null;
+		try {
+			address = "http://apicloud.mob.com/v1/weather/query?key=17cbd753c5b5f"
+					+"&city=" + URLEncoder.encode(starCounty.weather.getResult().get(0).getDistrct(), "utf-8")
+					+"&province=" + URLEncoder.encode(starCounty.weather.getResult().get(0).getCity(), "utf-8");
+		} catch (UnsupportedEncodingException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 		
-		String address = "http://apicloud.mob.com/v1/weather/query?key=17cbd753c5b5f&city=上海&province=上海";
-		System.out.println("==========address:" + address);
 		HttpUtil.sendHttpRequest(address, new HttpCallbackListener() {			
 			@Override
 			public void onFinish(Object response) {
@@ -198,12 +209,13 @@ public class ShowWeather extends RootActivity implements OnClickListener{
 		});
 	}
 	public void updateView(View view, StarCounty starCounty){
-		((android.widget.TextView)view.findViewById(R.id.view_temp1)).	setText(starCounty.weather.temperature);
-		((android.widget.TextView)view.findViewById(R.id.view_temp2)).	setText(starCounty.weather.temperature);
-		((android.widget.TextView)view.findViewById(R.id.text_weather)).setText(starCounty.weather.weather);
-		((android.widget.TextView)view.findViewById(R.id.text_publish)).setText(starCounty.weather.updateTime);
-		((android.widget.TextView)view.findViewById(R.id.text_date)).	setText(starCounty.weather.time);
-		((android.widget.TextView)view.findViewById(R.id.text_name)).	setText(starCounty.weather.weather);		
+		ResultBean result = starCounty.weather.getResult().get(0);
+		((android.widget.TextView)view.findViewById(R.id.view_temp1)).	setText(result.getTemperature());
+		((android.widget.TextView)view.findViewById(R.id.view_temp2)).	setText(result.getTemperature());
+		((android.widget.TextView)view.findViewById(R.id.text_weather)).setText(result.getWeather());
+		((android.widget.TextView)view.findViewById(R.id.text_publish)).setText(result.getUpdateTime());
+		((android.widget.TextView)view.findViewById(R.id.text_date)).	setText(result.getTime());
+		((android.widget.TextView)view.findViewById(R.id.text_name)).	setText(result.getDistrct());		
 	}
 
 	private void endRefreshList(){
