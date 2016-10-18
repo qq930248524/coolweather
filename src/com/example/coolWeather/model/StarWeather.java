@@ -1,6 +1,7 @@
 package com.example.coolWeather.model;
 
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -8,6 +9,10 @@ import java.util.List;
  */
 public class StarWeather {
 
+	public StarWeather(){
+		result = new ArrayList();
+		result.add(new ResultBean());
+	}
     /**
      * msg : success
      * result : [{"airCondition":"良","city":"北京","coldIndex":"低发期","date":"2016-10-17","distrct":"通州","dressingIndex":"夹衣类","exerciseIndex":"非常适宜","future":[{"date":"2016-10-17","dayTime":"晴","night":"晴","temperature":"21°C / 8°C","week":"今天","wind":"微风 小于3级"},{"date":"2016-10-18","dayTime":"晴","night":"霾","temperature":"21°C / 10°C","week":"星期二","wind":"微风 小于3级"},{"date":"2016-10-19","dayTime":"霾","night":"阴","temperature":"23°C / 12°C","week":"星期三","wind":"微风 小于3级"},{"date":"2016-10-20","dayTime":"阴","night":"阴","temperature":"16°C / 12°C","week":"星期四","wind":"微风 小于3级"},{"date":"2016-10-21","dayTime":"阴","night":"阴","temperature":"15°C / 10°C","week":"星期五","wind":"微风 小于3级"},{"date":"2016-10-22","dayTime":"多云","night":"多云","temperature":"16°C / 7°C","week":"星期六","wind":"北风 3～4级"},{"date":"2016-10-23","dayTime":"局部多云","night":"少云","temperature":"13°C / 4°C","week":"星期日","wind":"南风 2级"},{"date":"2016-10-24","dayTime":"局部多云","night":"局部多云","temperature":"14°C / 6°C","week":"星期一","wind":"东南偏南风 2级"},{"date":"2016-10-25","dayTime":"少云","night":"少云","temperature":"16°C / 7°C","week":"星期二","wind":"东南偏南风 2级"},{"date":"2016-10-26","dayTime":"局部多云","night":"局部多云","temperature":"16°C / 6°C","week":"星期三","wind":"东北偏北风 2级"}],"humidity":"湿度：98%","pollutionIndex":"81","province":"北京","sunrise":"06:26","sunset":"17:31","temperature":"10℃","time":"08:50","updateTime":"20161017090229","washIndex":"不适宜","weather":"晴","week":"周一","wind":"北风2级"}]
@@ -66,6 +71,7 @@ public class StarWeather {
     }
 
     public static class ResultBean {
+    	
         private String airCondition;
         private String city;
         private String coldIndex;
@@ -95,6 +101,11 @@ public class StarWeather {
          */
 
         private List<FutureBean> future;
+        
+    	public ResultBean(){
+    		future = new ArrayList<StarWeather.ResultBean.FutureBean>();
+    	}
+
 
         public String getAirCondition() {
             return airCondition;

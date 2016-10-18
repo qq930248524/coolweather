@@ -1,13 +1,19 @@
 package com.example.coolWeather.fragment;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.example.coolWeather.activity.ManageCounty;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import com.example.coolWeather.activity.SelectCounty;
 import com.example.coolWeather.db.CoolWeatherDB;
 import com.example.coolWeather.model.City;
 import com.example.coolWeather.model.County;
 import com.example.coolWeather.model.Province;
+import com.example.coolWeather.model.StarCounty;
 import com.example.coolWeather.util.HttpCallbackListener;
 import com.example.coolWeather.util.HttpUtil;
 import com.example.coolWeather.util.Utility;
@@ -63,6 +69,9 @@ public class CountyListFragment extends Fragment {
 		// TODO Auto-generated method stub
 		myself = inflater.inflate(R.layout.fragment_area_choose, null);
 		initView();
+		
+		//默认添加本地定位County到StarCounty列表
+		addLocalCounty();
 		//显示查询省
 		queryProvince();
 		return myself;
@@ -108,6 +117,58 @@ public class CountyListFragment extends Fragment {
 		progressDialog = new ProgressDialog(getActivity());
 		progressDialog.setMessage("正在加载。。。");
 		progressDialog.setCanceledOnTouchOutside(false);
+	}
+
+	/*************
+	 * 添加定位城市到数据库，主要过程为：	
+	 * 		1、获取公网IP
+	 * 		2、根据公网IP获取城市名字
+	 * 		3、将得到的county添加数据库
+	 */
+	private void addLocalCounty(){
+		
+		try {
+			String address = "https://ipip.yy.com/get_ip_info.php";
+			URL url = new URL(address);
+			HttpUtil.sendHttpRequest(address, new HttpCallbackListener() {				
+				@Override
+				public void onFinish(Object response) {
+					// TODO Auto-generated method stub
+					try {
+						String[] result = response.toString().split("=");
+						JSONObject jsonObject;
+						jsonObject = new JSONObject(result[1]);
+						String city 	= jsonObject.getString("city");
+						String province	= jsonObject.getString("province");
+
+						StarCounty starCounty = new StarCounty();
+						starCounty.weather.getResult().get(0).setProvince(province);
+						starCounty.weather.getResult().get(0).setCity(province);
+						starCounty.weather.getResult().get(0).setDistrct(city);
+						coolWeatherDB.saveStarCounty(starCounty);
+					} catch (JSONException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					
+
+				}
+				
+				@Override
+				public void onError(Exception e) {
+					// TODO Auto-generated method stub
+					
+				}
+			});
+		} catch (MalformedURLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		/*
+		 * 1/getIp
+		 * 2/getCounty
+		 * 3/saveDb
+		 */
 	}
 	
 	/****************************
@@ -239,7 +300,7 @@ public class CountyListFragment extends Fragment {
 									name.add(selectedCity.getCityName());
 									name.add(selectedCounty.getCountyName());
 									name.add(picCode);
-									((ManageCounty) getActivity()).showGeography(name);
+									((SelectCounty) getActivity()).showGeography(name);
 								}
 								break;
 							default:

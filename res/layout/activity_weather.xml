@@ -23,6 +23,12 @@
             android:layout_height="50dp"
             android:layout_alignParentRight="true"
             android:text="2" />
+        <Button 
+            android:id="@+id/btn_refresh"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_toLeftOf="@id/btn_share"
+            android:background="@drawable/refresh"/>
     </RelativeLayout>
 
     <LinearLayout
@@ -45,8 +51,7 @@
             android:layout_weight="1"
             android:layout_marginBottom="40dp"
             android:layout_gravity="center_horizontal"
-            android:orientation="horizontal"
-            android:background="@android:color/background_light" >
+            android:orientation="horizontal" >
         </LinearLayout>
     </LinearLayout>
 

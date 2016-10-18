@@ -7,6 +7,7 @@ import com.example.coolWeather.model.City;
 import com.example.coolWeather.model.County;
 import com.example.coolWeather.model.Province;
 import com.example.coolWeather.model.StarCounty;
+import com.example.coolWeather.model.StarWeather;
 import com.example.coolWeather.model.StarWeather.ResultBean;
 
 import android.content.ContentValues;
@@ -116,6 +117,11 @@ public class CoolWeatherDB {
 		return list;
 	}
 	
+	/**************
+	 * 判断code是否已经保存到StarCounty数据库
+	 * @param weatherCode
+	 * @return	true：已经存在		false：没有
+	 */
 	public Boolean isStarCounty(String weatherCode){
 		Boolean flag = false;
 		Cursor cursor =	db.query("StarCounty", null, "weather_code = ?",
@@ -124,9 +130,23 @@ public class CoolWeatherDB {
 		cursor.close();
 		return flag;
 	}
+
+	/********************************
+	 * 判断是否为本地定位城市，只能根据名字查找
+	 * @param countyName
+	 * @return 	true：已经存在		false：没有
+	 */
+	public Boolean isLocalCounty(String countyName){
+		Boolean flag = false;
+		Cursor cursor = db.query("StarCounty", null, "distrct = ?",
+				new String[] {String.valueOf(countyName)}, null, null, null);
+		flag = cursor.moveToFirst()?true:false;
+		cursor.close();
+		return flag;		
+	}
 	
 	public void saveStarCounty(StarCounty starCounty){
-		if(!isStarCounty(starCounty.weather_code)){
+		if(!isStarCounty(starCounty.weather_code) && !isLocalCounty(starCounty.weather.getResult().get(0).getDistrct())){
 			ResultBean result = starCounty.weather.getResult().get(0);
 			
 			ContentValues values = new ContentValues();
@@ -165,9 +185,13 @@ public class CoolWeatherDB {
 		if(cursor.moveToFirst()){
 			do{
 				StarCounty starCounty =  new StarCounty();
-				ResultBean result = starCounty.weather.getResult().get(0);
+				ResultBean result = null;
+				StarWeather temp = starCounty.weather;
+				result = starCounty.weather.getResult().get(0);
+				
+				
 				starCounty.weather_code 		= (cursor.getString(cursor.getColumnIndex("weather_code")));
-				result.setAirCondition	(cursor.getString(cursor.getColumnIndex("airCondition")));
+				temp.getResult().get(0).setAirCondition	(cursor.getString(cursor.getColumnIndex("airCondition")));
 				result.setCity			(cursor.getString(cursor.getColumnIndex("city")));
 				result.setDate			(cursor.getString(cursor.getColumnIndex("date")));
 				result.setDistrct		(cursor.getString(cursor.getColumnIndex("distrct")));

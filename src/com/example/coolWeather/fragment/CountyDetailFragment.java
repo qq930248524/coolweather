@@ -4,7 +4,7 @@ import java.sql.SQLClientInfoException;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.example.coolWeather.activity.ManageCounty;
+import com.example.coolWeather.activity.SelectCounty;
 import com.example.coolWeather.db.CoolWeatherDB;
 import com.example.coolWeather.model.StarCounty;
 import com.example.coolWeather.util.HttpCallbackListener;
@@ -84,6 +84,7 @@ public class CountyDetailFragment extends Fragment implements OnClickListener{
 	
 	void initView(){
 		STAR_FLAG = coolWeatherDb.isStarCounty(name.get(WEATHER_CODE));
+		STAR_FLAG = coolWeatherDb.isLocalCounty(name.get(COUNTY));
 		textGeoraphy = (TextView) myself.findViewById(R.id.city_name);
 		textGeoraphy.setText(name.get(COUNTY));
 		myself.findViewById(R.id.btn_back).setOnClickListener(this);
@@ -147,7 +148,7 @@ public class CountyDetailFragment extends Fragment implements OnClickListener{
 		switch(v.getId()){
 		case R.id.btn_back:
 			saveData();
-			((ManageCounty) getActivity()).showCoutyList();
+			((SelectCounty) getActivity()).showCoutyList();
 			break;
 		case R.id.btn_collect:
 			if(STAR_FLAG){

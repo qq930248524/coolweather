@@ -12,15 +12,14 @@
     
     <Button
         android:id="@+id/btn1"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="fun1" />
+		style="@style/left_menu_btn" />
 
     <Button
         android:id="@+id/btn2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="fun2" />
+        style="@style/left_menu_btn"/>
 
+    <Button 
+        android:id="@+id/btn3"
+        style="@style/left_menu_btn"/>
 
 </LinearLayout>

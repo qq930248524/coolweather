@@ -76,7 +76,8 @@ public class ShowWeather extends RootActivity implements OnClickListener{
 		//初始化viewPager
 		viewPager = (ViewPager) findViewById(R.id.viewpager);
 		viewPager.setAdapter(adapter);
-		viewPager.setOnPageChangeListener(new OnPageChangeListener() {			
+		viewPager.setOnPageChangeListener(new OnPageChangeListener() {					
+			
 			@Override
 			public void onPageSelected(int arg0) {
 				// TODO Auto-generated method stub
@@ -95,6 +96,13 @@ public class ShowWeather extends RootActivity implements OnClickListener{
 				// TODO Auto-generated method stub
 			}
 		});
+		
+		//初始化首次显示viewPager的首页
+		StarCounty firstStar = starList.get(0);
+		if(starList.get(0).weather.getResult().get(0).getWeather() == null){
+			startRefresh(starList.get(0));
+		}
+		
 		//初始化点点的线性布局
 		inflatPointList();
 		setPointBright(0);		
@@ -109,6 +117,10 @@ public class ShowWeather extends RootActivity implements OnClickListener{
 				getSlidingMenu().showMenu();
 				break;
 			case R.id.btn_share:
+				break;
+			case R.id.btn_refresh:
+				StarCounty starCounty = starList.get(viewPager.getCurrentItem());
+				startRefresh(starCounty);
 				break;
 			}
 		}
@@ -129,7 +141,7 @@ public class ShowWeather extends RootActivity implements OnClickListener{
 			LinearLayout.LayoutParams p = new LinearLayout.LayoutParams(
 					LinearLayout.LayoutParams.WRAP_CONTENT,
 					LinearLayout.LayoutParams.WRAP_CONTENT);
-			p.setMargins(0, 0, 0, 10);
+			p.setMargins(10, 0, 10, 10);
 			pointView.setEnabled(true);
 			pointList.add(pointView);
 			pointLayout.addView(pointView, p);
@@ -138,14 +150,8 @@ public class ShowWeather extends RootActivity implements OnClickListener{
 	private ArrayList<View> inflatViewList(ArrayList<StarCounty> starList){
 		ArrayList<View> viewList = new ArrayList<View>();		
 		for(StarCounty starCounty: starList){
-			View view = getLayoutInflater().inflate(R.layout.activity_show_weather, null);
-			ResultBean result = starCounty.weather.getResult().get(0);
-			((TextView) view.findViewById(R.id.text_publish)).	setText(result.getUpdateTime());
-			((TextView) view.findViewById(R.id.text_date)).		setText(result.getTime());
-			((TextView) view.findViewById(R.id.view_temp1)).	setText(result.getTemperature());
-			((TextView) view.findViewById(R.id.view_temp2)).	setText(result.getTemperature());
-			((TextView) view.findViewById(R.id.text_weather)).	setText(result.getWeather());			
-			((TextView) view.findViewById(R.id.text_name)).		setText(result.getDistrct());			
+			View view = getLayoutInflater().inflate(R.layout.viewpager_weather, null);
+			updateView(view, starCounty);
 			viewList.add(view);
 		}			
 		return viewList;
@@ -165,6 +171,14 @@ public class ShowWeather extends RootActivity implements OnClickListener{
 		return fragmentList;
 	}
 
+	/**************************
+	 * 刷新天气pager，主要完成以下操作
+	 * 	1、从http获取数据、
+	 * 	2、在回调函数中将StarCounty保存数据库
+	 * 	3、在回调函数中执行runOnUiThread，更新控件信息
+	 * 
+	 * @param starCounty 待刷新的实例
+	 */
 	private void startRefresh(final StarCounty starCounty){
 		if(!progressDialog.isShowing()){
 			progressDialog.show();
@@ -192,6 +206,7 @@ public class ShowWeather extends RootActivity implements OnClickListener{
 					@Override
 					public void run() {
 						// TODO Auto-generated method stub
+						adapter.notifyDataSetChanged();
 						View view = viewPager.findViewWithTag(viewPager.getCurrentItem());
 						updateView(view, starCounty);						
 					}
@@ -211,10 +226,10 @@ public class ShowWeather extends RootActivity implements OnClickListener{
 	public void updateView(View view, StarCounty starCounty){
 		ResultBean result = starCounty.weather.getResult().get(0);
 		((android.widget.TextView)view.findViewById(R.id.view_temp1)).	setText(result.getTemperature());
-		((android.widget.TextView)view.findViewById(R.id.view_temp2)).	setText(result.getTemperature());
+		//((android.widget.TextView)view.findViewById(R.id.view_temp2)).	setText(result.getTemperature());
 		((android.widget.TextView)view.findViewById(R.id.text_weather)).setText(result.getWeather());
-		((android.widget.TextView)view.findViewById(R.id.text_publish)).setText(result.getUpdateTime());
-		((android.widget.TextView)view.findViewById(R.id.text_date)).	setText(result.getTime());
+		((android.widget.TextView)view.findViewById(R.id.text_publish)).setText("今天" + result.getTime() + "发布");
+		((android.widget.TextView)view.findViewById(R.id.text_date)).	setText(result.getDate());
 		((android.widget.TextView)view.findViewById(R.id.text_name)).	setText(result.getDistrct());		
 	}
 

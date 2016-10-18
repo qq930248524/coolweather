@@ -14,7 +14,8 @@ import cn.sharesdk.framework.ShareSDK;
 
 public class RootActivity extends SlidingFragmentActivity implements OnClickListener{
 	private Button btnWeather;
-	private Button btnCity;
+	private Button btnSelectCounty;
+	private Button btnMangeCounty;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -31,8 +32,8 @@ public class RootActivity extends SlidingFragmentActivity implements OnClickList
 	private void initView(){
 		btnWeather = (Button) findViewById(R.id.btn1);
 		btnWeather.setOnClickListener(this);
-		btnCity = (Button) findViewById(R.id.btn2);
-		btnCity.setOnClickListener(this);
+		btnSelectCounty = (Button) findViewById(R.id.btn2);
+		btnSelectCounty.setOnClickListener(this);
 	}
 	
 
@@ -61,8 +62,13 @@ public class RootActivity extends SlidingFragmentActivity implements OnClickList
 			finish();
 			break;
 		case R.id.btn2:
-			Intent intent2 = new Intent(this, ManageCounty.class);
+			Intent intent2 = new Intent(this, SelectCounty.class);
 			startActivity(intent2);
+			finish();
+			break;
+		case R.id.btn3:
+			Intent intent3 = new Intent(this, ManageCounty.class);
+			startActivity(intent3);
 			finish();
 			break;
 		}	
