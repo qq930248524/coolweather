@@ -10,7 +10,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
 import android.widget.Button;
-import cn.sharesdk.framework.ShareSDK;
 
 public class RootActivity extends SlidingFragmentActivity implements OnClickListener{
 	private Button btnWeather;
@@ -34,6 +33,8 @@ public class RootActivity extends SlidingFragmentActivity implements OnClickList
 		btnWeather.setOnClickListener(this);
 		btnSelectCounty = (Button) findViewById(R.id.btn2);
 		btnSelectCounty.setOnClickListener(this);
+		btnMangeCounty = (Button) findViewById(R.id.btn3);
+		btnMangeCounty.setOnClickListener(this);
 	}
 	
 

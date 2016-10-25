@@ -15,6 +15,7 @@ import android.os.Bundle;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+
 public class ManageCounty extends RootActivity {
 	
 	private PullToRefreshListView refreshListView;
@@ -24,7 +25,8 @@ public class ManageCounty extends RootActivity {
 	public void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_manage_county);
+		setContentView(R.layout.activity_manage_county);	
+		
 		initData();
 		initView();
 	}
@@ -33,8 +35,6 @@ public class ManageCounty extends RootActivity {
 		String[]strArray = {"aaa","bb", "cc", "dd", "ee", "ff", "gg", "hh", "ii", "jj", "kk"};
 		dataList = new ArrayList<String>();
 		dataList.addAll(Arrays.asList(strArray));
-		
-		
 	}
 	
 	private void initView(){
@@ -47,10 +47,11 @@ public class ManageCounty extends RootActivity {
 				ILoadingLayout pullLayout = refreshView.getLoadingLayoutProxy(true, false);
 				pullLayout.setPullLabel("xia la shua xin");
 				pullLayout.setRefreshingLabel("zheng zai la");
-				pullLayout.setReleaseLabel("shi fang shua xin");
-				
+				pullLayout.setReleaseLabel("shi fang shua xin");	
+				new MyAsyncTask().execute();
 			}
 		});
+		
 		
 		ListView listView = refreshListView.getRefreshableView();
 		ArrayAdapter madapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, dataList);
@@ -58,26 +59,32 @@ public class ManageCounty extends RootActivity {
 	}
 	
 	private class MyAsyncTask extends AsyncTask<Void, Void, String>{
-
-		@Override
-		protected String doInBackground(Void... params) {
-			// TODO Auto-generated method stub
-			
-            try {  
-                Thread.sleep(4000);  
-            } catch (InterruptedException e) {  
-            }  
-			publishProgress();
-			
-			return null;
-		}
-		
 		@Override
 		protected void onPreExecute() {
 			// TODO Auto-generated method stub
 			super.onPreExecute();
 		}
 		
+		@Override
+		protected String doInBackground(Void... params) {
+			// TODO Auto-generated method stub
+			
+            try {  
+                Thread.sleep(40);  
+            } catch (InterruptedException e) {  
+            }  
+            System.out.println("after doInBackground!");
+			publishProgress();			
+			return null;
+		}
+		
+
+		@Override
+		protected void onProgressUpdate(Void... values) {
+			// TODO Auto-generated method stub
+			super.onProgressUpdate(values);
+			System.out.println("after onProgressUpdate!");
+		}
 	    /**  
 	     * 这里的String参数对应AsyncTask中的第三个参数（也就是接收doInBackground的返回值）  
 	     * 在doInBackground方法执行结束之后在运行，并且运行在UI线程当中 可以对UI空间进行设置  
@@ -87,13 +94,7 @@ public class ManageCounty extends RootActivity {
 			// TODO Auto-generated method stub
 			refreshListView.onRefreshComplete();
 			super.onPostExecute(result);
-		}
-		
-		@Override
-		protected void onProgressUpdate(Void... values) {
-			// TODO Auto-generated method stub
-			super.onProgressUpdate(values);
-		}
-		
+			System.out.println("after onPostExecute!");
+		}		
 	}
 }

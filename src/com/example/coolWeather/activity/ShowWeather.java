@@ -30,7 +30,6 @@ import android.view.View.OnClickListener;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
-import cn.sharesdk.framework.ShareSDK;
 import android.widget.TextView;
 
 public class ShowWeather extends RootActivity implements OnClickListener{
@@ -52,7 +51,7 @@ public class ShowWeather extends RootActivity implements OnClickListener{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_weather);
 		//初始化shareSDK，用户微信分享
-		ShareSDK.initSDK(getApplicationContext(), "17c8e1454cf40");
+		//ShareSDK.initSDK(getApplicationContext(), "17c8e1454cf40");
 		initData();
 		initView();
 	}
