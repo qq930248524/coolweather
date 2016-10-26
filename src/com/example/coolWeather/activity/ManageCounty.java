@@ -3,6 +3,9 @@ package com.example.coolWeather.activity;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import com.example.coolWeather.adapter.ListViewAdapter;
+import com.example.coolWeather.db.CoolWeatherDB;
+import com.example.coolWeather.model.StarCounty;
 import com.example.greattest.R;
 import com.handmark.pulltorefresh.library.ILoadingLayout;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
@@ -19,7 +22,9 @@ import android.widget.ListView;
 public class ManageCounty extends RootActivity {
 	
 	private PullToRefreshListView refreshListView;
-	private ArrayList<String> dataList;
+	private ArrayList<StarCounty> dataList;
+	
+	private CoolWeatherDB coolWeatherDb;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -32,9 +37,9 @@ public class ManageCounty extends RootActivity {
 	}
 	
 	private void initData(){
-		String[]strArray = {"aaa","bb", "cc", "dd", "ee", "ff", "gg", "hh", "ii", "jj", "kk"};
-		dataList = new ArrayList<String>();
-		dataList.addAll(Arrays.asList(strArray));
+		coolWeatherDb = CoolWeatherDB.getInstance(this);
+		dataList = new ArrayList<StarCounty>();
+		dataList = coolWeatherDb.loadStarCountyList();
 	}
 	
 	private void initView(){
@@ -50,11 +55,10 @@ public class ManageCounty extends RootActivity {
 				pullLayout.setReleaseLabel("shi fang shua xin");	
 				new MyAsyncTask().execute();
 			}
-		});
-		
+		});		
 		
 		ListView listView = refreshListView.getRefreshableView();
-		ArrayAdapter madapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, dataList);
+		ListViewAdapter madapter = new ListViewAdapter(this, listView, R.layout.listview_item, dataList);
 		listView.setAdapter(madapter);
 	}
 	

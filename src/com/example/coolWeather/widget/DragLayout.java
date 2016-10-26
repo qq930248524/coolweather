@@ -136,19 +136,30 @@ public class DragLayout extends LinearLayout {
 
 	@Override
 	public boolean onInterceptTouchEvent(MotionEvent ev) {
+		Log.v("touch", "[dragLayout] onInterceptTouchEvent! return false!");
+		return false;
 		// TODO Auto-generated method stub
-		getParent().requestDisallowInterceptTouchEvent(false);
-		if(mDragged.shouldInterceptTouchEvent(ev) == true){
-			return true;
-		}
-		return super.onInterceptTouchEvent(ev);
+//		getParent().requestDisallowInterceptTouchEvent(false);
+//		if(mDragged.shouldInterceptTouchEvent(ev) == true){
+//			return true;
+//		}
+//		return super.onInterceptTouchEvent(ev);
 	}
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
+		Log.v("touch", "[dragLayout] onTouchEvent! return true!");
+		Log.v("touch", "[dragLayout] onTouchEvent = " + event.getAction());
+
 		// TODO Auto-generated method stub
 		if(event.getAction() == MotionEvent.ACTION_DOWN){
 			downX = event.getX();
 			downY = event.getY();
+			Log.v("touch", "[dragLayout] onTouchEvent downX = " + downX);
+			Log.v("touch", "[dragLayout] onTouchEvent downY = " + downY);
+			if(downX<10)	return false;
+		}
+		if(event.getAction() == MotionEvent.ACTION_MOVE){
+			if(Math.abs(downY-event.getY()) > 5)	return false;
 		}
 		if(event.getAction() == MotionEvent.ACTION_UP){
 			if(Math.abs(downX-event.getX()) > 10 && Math.abs(downY-event.getY()) >10){

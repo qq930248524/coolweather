@@ -6,17 +6,20 @@
 
 
     <com.example.coolWeather.widget.DragLayout
+        android:id="@+id/dragLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="horizontal"
         android:background="@android:color/holo_green_dark" >
 
         <TextView
+            android:id="@+id/textContent"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@android:color/holo_blue_light" />
 
         <TextView
+            android:id="@+id/textDelete"
             android:layout_width="100dp"
             android:layout_height="wrap_content"
             android:background="@android:color/holo_red_light"/>
