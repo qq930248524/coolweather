@@ -1,7 +1,6 @@
 package com.example.coolWeather.activity;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 import com.example.coolWeather.adapter.ListViewAdapter;
 import com.example.coolWeather.db.CoolWeatherDB;
@@ -15,8 +14,8 @@ import com.handmark.pulltorefresh.library.PullToRefreshListView;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 
 
 public class ManageCounty extends RootActivity {
@@ -43,6 +42,9 @@ public class ManageCounty extends RootActivity {
 	}
 	
 	private void initView(){
+		TextView titileText = (TextView)findViewById(R.id.title_text);
+		titileText.setText("城市管理");
+		
 		refreshListView = (PullToRefreshListView) findViewById(R.id.pulltorefreshListView);
 		refreshListView.setMode(Mode.PULL_FROM_START);
 		refreshListView.setOnRefreshListener(new OnRefreshListener<ListView>() {//监听器2是两个重写函数，上啦和下拉；监听器1只有一个
@@ -58,7 +60,7 @@ public class ManageCounty extends RootActivity {
 		});		
 		
 		ListView listView = refreshListView.getRefreshableView();
-		ListViewAdapter madapter = new ListViewAdapter(this, listView, R.layout.listview_item, dataList);
+		ListViewAdapter madapter = new ListViewAdapter(this, listView, R.layout.listview_item, dataList, coolWeatherDb);
 		listView.setAdapter(madapter);
 	}
 	

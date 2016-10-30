@@ -3,6 +3,7 @@ package com.example.coolWeather.adapter;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.example.coolWeather.db.CoolWeatherDB;
 import com.example.coolWeather.model.StarCounty;
 import com.example.coolWeather.widget.DragLayout;
 import com.example.greattest.R;
@@ -10,6 +11,7 @@ import com.example.greattest.R;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
@@ -24,13 +26,15 @@ public class ListViewAdapter extends ArrayAdapter<StarCounty> {
 	private HoldChild4ItemView holdChild4ItemView;
 	private int index = -1;
 	private ListView listView;
+	private CoolWeatherDB db;
 	
-	public ListViewAdapter(Context context, ListView listView, int resource, List<StarCounty> objects) {
+	public ListViewAdapter(Context context, ListView listView, int resource, List<StarCounty> objects, CoolWeatherDB db) {
 		super(context, resource, objects);
 		// TODO Auto-generated constructor stub
 		this.dataList = (ArrayList<StarCounty>) objects;
 		this.itemLayoutId = resource;
 		this.listView = listView;
+		this.db = db;
 	}
 
 	
@@ -62,11 +66,7 @@ public class ListViewAdapter extends ArrayAdapter<StarCounty> {
 		// TODO Auto-generated method stub
 		StarCounty starCounty= this.dataList.get(position);
 		View view;
-		////////////
-//		view = LayoutInflater.from(getContext()).inflate(itemLayoutId, null);
-//		TextView content = (TextView) view.findViewById(R.id.textContent);
-//		content.setText("test");
-		///////////////
+
 		if(convertView != null){
 			view = convertView;
 			holdChild4ItemView = (HoldChild4ItemView) view.getTag();
@@ -83,26 +83,43 @@ public class ListViewAdapter extends ArrayAdapter<StarCounty> {
 		holdChild4ItemView.content.setText(starCounty.weather.getResult().get(0).getDistrct());
 		holdChild4ItemView.delete.setText("删除");
 		holdChild4ItemView.delete.setVisibility(View.GONE);
-//		
-//		holdChild4ItemView.dragLayout.setOnslide(new DragLayout.slideListenerCallBack() {			
-//			@Override
-//			public void onSlided(Boolean flag) {
-//				// TODO Auto-generated method stub
-//				if(index != -1){
-//					if(listView.getChildAt(index-listView.getFirstVisiblePosition()) != null){
-//						DragLayout itemLayout = (DragLayout) listView.getChildAt(index-listView.getFirstVisiblePosition()).findViewById(R.id.dragLayout);
-//						itemLayout.revert();						
+		holdChild4ItemView.delete.setOnClickListener(new OnClickListener() {			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				db.removeStarCounty(dataList.get(position));
+				dataList.remove(position);
+				notifyDataSetChanged();
+				Toast.makeText(getContext(), "删除成功！", Toast.LENGTH_SHORT).show();
+			}
+		});
+		
+		holdChild4ItemView.dragLayout.setOnslide(new DragLayout.slideListenerCallBack() {			
+			@Override
+			public void onSlided(Boolean flag) {
+				// TODO Auto-generated method stub
+				System.out.println("=================index = " + index);
+//				if(flag){
+//					if(index != position && index != -1){
+//						if(listView.getChildAt(index) != null){
+//							DragLayout itemLayout = (DragLayout) listView.getChildAt(index-listView.getFirstVisiblePosition()).findViewById(R.id.dragLayout);
+//							itemLayout.revert();	
+//						}
+//					}
+//					index = position;
+//				}else{
+//					if(index == position){
+//						index = -1;
 //					}
 //				}
-//				index = position;
-//			}
-//			
-//			@Override
-//			public void onClick() {
-//				// TODO Auto-generated method stub
-//				Toast.makeText(getContext(), "This is onClick!", Toast.LENGTH_LONG).show();
-//			}
-//		});
+			}
+			
+			@Override
+			public void onClick() {
+				// TODO Auto-generated method stub
+				Toast.makeText(getContext(), "This is onClick!", Toast.LENGTH_LONG).show();
+			}
+		});
 		return view;
 	}
 

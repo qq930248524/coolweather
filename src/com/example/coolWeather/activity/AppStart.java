@@ -37,7 +37,7 @@ public class AppStart extends Activity {
 			@Override
 			public void onAnimationEnd(Animation animation) {
 				// TODO Auto-generated method stub
-				Intent intent = new Intent(AppStart.this, ShowWeather.class);
+				Intent intent = new Intent(AppStart.this, SelectCounty.class);
 				startActivity(intent);
 				finish();
 			}

@@ -70,6 +70,7 @@ public class ShowWeather extends RootActivity implements OnClickListener{
 
 	private void initView(){
 		findViewById(R.id.btn_fun).setOnClickListener(clickListener);
+		findViewById(R.id.btn_refresh).setOnClickListener(clickListener);
 		findViewById(R.id.btn_share).setOnClickListener(clickListener);
 
 		//初始化viewPager

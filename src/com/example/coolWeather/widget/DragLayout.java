@@ -58,7 +58,7 @@ public class DragLayout extends LinearLayout {
 
 			public void onViewPositionChanged(View changedView, int left, int top, int dx, int dy) {
 				dragX = left;
-				getParent().requestDisallowInterceptTouchEvent(true);
+				getParent().requestDisallowInterceptTouchEvent(changedView.getLeft() != 0 ? true : false);
 				if(changedView == contentView){
 					actionView.offsetLeftAndRight(dx);
 				}
@@ -136,14 +136,8 @@ public class DragLayout extends LinearLayout {
 
 	@Override
 	public boolean onInterceptTouchEvent(MotionEvent ev) {
-		Log.v("touch", "[dragLayout] onInterceptTouchEvent! return false!");
-		return false;
-		// TODO Auto-generated method stub
-//		getParent().requestDisallowInterceptTouchEvent(false);
-//		if(mDragged.shouldInterceptTouchEvent(ev) == true){
-//			return true;
-//		}
-//		return super.onInterceptTouchEvent(ev);
+		Log.v("touch", "[dragLayout] onInterceptTouchEvent! return "+mDragged.shouldInterceptTouchEvent(ev));
+		return mDragged.shouldInterceptTouchEvent(ev);
 	}
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
@@ -174,6 +168,7 @@ public class DragLayout extends LinearLayout {
 		if(mDragged != null){
 			mDragged.smoothSlideViewTo(contentView, 0, 0);
 			invalidate();
+			ViewCompat.postInvalidateOnAnimation(DragLayout.this);
 		}
 	}	
 	public void setOnslide(slideListenerCallBack callBack){
