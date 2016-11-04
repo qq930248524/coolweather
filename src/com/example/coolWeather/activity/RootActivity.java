@@ -9,9 +9,13 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
+import android.widget.ImageView;
 
 public class RootActivity extends SlidingFragmentActivity implements OnClickListener{
+	private ImageView headImageView;
 	private Button btnWeather;
 	private Button btnSelectCounty;
 	private Button btnMangeCounty;
@@ -31,15 +35,21 @@ public class RootActivity extends SlidingFragmentActivity implements OnClickList
 	private void initView(){
 		btnWeather = (Button) findViewById(R.id.btn1);
 		btnWeather.setOnClickListener(this);
+		btnWeather.setText("天气预报");
 		btnSelectCounty = (Button) findViewById(R.id.btn2);
 		btnSelectCounty.setOnClickListener(this);
+		btnSelectCounty.setText("城市收藏");
 		btnMangeCounty = (Button) findViewById(R.id.btn3);
 		btnMangeCounty.setOnClickListener(this);
+		btnMangeCounty.setText("收藏管理");
+		
+		headImageView = (ImageView) findViewById(R.id.imageHead);
+		Animation anm = AnimationUtils.loadAnimation(this, R.anim.head_rotate);
+		headImageView.setAnimation(anm);
 	}
 	
 
 	private void initLeftMenu(){
-
 		SlidingMenu menu = getSlidingMenu();
 		menu.setMode(SlidingMenu.LEFT);
 		// 设置触摸屏幕的模式
@@ -74,6 +84,4 @@ public class RootActivity extends SlidingFragmentActivity implements OnClickList
 			break;
 		}	
 	}
-
-
 }

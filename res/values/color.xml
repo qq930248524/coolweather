@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="bg_blue">#0099ff</color>
+    <color name="bg_white">#ffffff</color>
+    <color name="bg_grey">#888888</color>
+    <color name="bg_red">#f55c50</color>
+    <color name="menu_red">#fe4574</color>
+    <color name="menu_yellow">#d9d734</color>
+    <color name="menu_brown">#afab2e</color>
+    <color name="menu_purple">#af2e71</color>
+    <color name="menu_blue">#2e89af</color>
+    <color name="menu_green">#62af2e</color>
+
+</resources>

@@ -33,8 +33,9 @@ public class Utility {
 //			SimpleDateFormat format = new SimpleDateFormat("yy年MM月dd日--HH时mm分ss秒");
 //			Date date = new Date(currentTime);
 //			starCounty.get_time 		= format.format(date);
-		
-		starCounty.weather = new Gson().fromJson(response, StarWeather.class);
+		Gson gson = new Gson();
+		StarCounty temp = new StarCounty();
+		starCounty.weather = gson.fromJson(response, StarWeather.class);
 		
 		//更新数据库中StarCounty的元素
 		coolWeatherDB.removeStarCounty(starCounty);

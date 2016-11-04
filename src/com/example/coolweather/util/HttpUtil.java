@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
 
 import android.graphics.Bitmap;
@@ -46,6 +47,30 @@ public class HttpUtil {
 				}
 			}
 		}).start();
+	}
+	
+	public static String sendHttprequestNature(final String address){
+		StringBuilder response = new StringBuilder();
+		try {
+			URL url = new URL(address);
+			HttpURLConnection connection = null;
+			connection = (HttpURLConnection) url.openConnection();
+			connection.setRequestMethod("GET");
+			connection.setConnectTimeout(8000);
+			connection.connect();
+			InputStream in = connection.getInputStream();
+			InputStreamReader inr = new InputStreamReader(in);
+			BufferedReader reader = new BufferedReader(inr);
+			String line;
+			
+			while((line = reader.readLine()) != null){
+				response.append(line);
+			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return response.toString();
 	}
 	
 	public static void sendHttpRequestBitmap(final String address, final HttpCallbackListener listener){

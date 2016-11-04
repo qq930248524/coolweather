@@ -23,9 +23,8 @@
             android:id="@+id/textDelete"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:background="@android:color/holo_red_light"
-            android:gravity="center"
-            android:textSize="30sp" />
+            android:background="@drawable/delete"
+            android:gravity="center" />
     </com.example.coolWeather.widget.DragLayout>
 
 </LinearLayout>

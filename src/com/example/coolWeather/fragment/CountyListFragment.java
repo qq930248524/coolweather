@@ -44,7 +44,7 @@ public class CountyListFragment extends Fragment {
 	private TextView titileText;
 	private ListView listView;
 	private ArrayAdapter<String> adapter;
-	private CoolWeatherDB coolWeatherDB;
+	private static CoolWeatherDB coolWeatherDB;
 	
 	private List<String> dataList = new ArrayList<String>();
 	private List<Province> provinceList;
@@ -63,6 +63,7 @@ public class CountyListFragment extends Fragment {
 	public void onAttach(Activity activity) {
 		// TODO Auto-generated method stub
 		super.onAttach(activity);
+		coolWeatherDB = CoolWeatherDB.getInstance(getActivity());
 	}
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -87,7 +88,7 @@ public class CountyListFragment extends Fragment {
 	public void initView(){
 		currentLevel = LEVEL_PROVINCE;
 		titileText = (TextView) myself.findViewById(R.id.title_text);
-		coolWeatherDB = CoolWeatherDB.getInstance(getActivity());
+		
 		
 		adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, dataList);
 		listView = (ListView) myself.findViewById(R.id.listView);
@@ -125,7 +126,7 @@ public class CountyListFragment extends Fragment {
 	 * 		2、根据公网IP获取城市名字
 	 * 		3、将得到的county添加数据库
 	 */
-	private void addLocalCounty(){
+	public static void addLocalCounty(){
 		
 		try {
 			String address = "https://ipip.yy.com/get_ip_info.php";

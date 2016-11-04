@@ -6,9 +6,10 @@ import java.util.List;
 import com.example.coolWeather.model.City;
 import com.example.coolWeather.model.County;
 import com.example.coolWeather.model.Province;
+import com.example.coolWeather.model.Result;
 import com.example.coolWeather.model.StarCounty;
 import com.example.coolWeather.model.StarWeather;
-import com.example.coolWeather.model.StarWeather.ResultBean;
+import com.google.gson.Gson;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -147,29 +148,12 @@ public class CoolWeatherDB {
 	
 	public void saveStarCounty(StarCounty starCounty){
 		if(!isStarCounty(starCounty.weather_code) && !isLocalCounty(starCounty.weather.getResult().get(0).getDistrct())){
-			ResultBean result = starCounty.weather.getResult().get(0);
 			
 			ContentValues values = new ContentValues();
+			String contentJson = new Gson().toJson(starCounty.weather);
+			values.put("contentJson", 	contentJson);
 			values.put("weather_code", 	starCounty.weather_code);
-			values.put("airCondition", 	result.getAirCondition());
-			values.put("city", 			result.getCity());
-			values.put("coldIndex", 	result.getColdIndex());
-			values.put("date", 			result.getDate());
-			values.put("distrct", 		result.getDistrct());
-			values.put("dressingIndex",	result.getDressingIndex());
-			values.put("exerciseIndex",	result.getExerciseIndex());
-			values.put("humidity", 		result.getHumidity());
-			values.put("pollutionIndex",result.getPollutionIndex());
-			values.put("province", 		result.getProvince());
-			values.put("sunrise", 		result.getSunrise());
-			values.put("sunset", 		result.getSunset());
-			values.put("temperature", 	result.getTemperature());
-			values.put("time", 			result.getTime());
-			values.put("updateTime", 	result.getUpdateTime());
-			values.put("washIndex", 	result.getWashIndex());
-			values.put("weather", 		result.getWeather());
-			values.put("weak", 			result.getWeek());
-			values.put("wind", 			result.getWind());
+			values.put("distrct", starCounty.weather.getResult().get(0).getDistrct());
 			
 			db.insert("StarCounty", null, values);
 		}
@@ -178,39 +162,20 @@ public class CoolWeatherDB {
 		if(isStarCounty(starCounty.weather_code)){
 			db.delete("StarCounty", "weather_code = ?", new String[]{String.valueOf(starCounty.weather_code)});
 		}
+		String distrct = starCounty.weather.getResult().get(0).getDistrct();
+		if(isLocalCounty(distrct)){
+			db.delete("StarCounty", "distrct = ?", new String[]{String.valueOf(distrct)});
+		}
 	}
 	public ArrayList<StarCounty> loadStarCountyList(){
 		ArrayList<StarCounty> list = new ArrayList<StarCounty>();
 		Cursor cursor = db.query("StarCounty", null, null, null, null, null, null);
 		if(cursor.moveToFirst()){
 			do{
-				StarCounty starCounty =  new StarCounty();
-				ResultBean result = null;
-				StarWeather temp = starCounty.weather;
-				result = starCounty.weather.getResult().get(0);
-				
-				
-				starCounty.weather_code 		= (cursor.getString(cursor.getColumnIndex("weather_code")));
-				temp.getResult().get(0).setAirCondition	(cursor.getString(cursor.getColumnIndex("airCondition")));
-				result.setCity			(cursor.getString(cursor.getColumnIndex("city")));
-				result.setDate			(cursor.getString(cursor.getColumnIndex("date")));
-				result.setDistrct		(cursor.getString(cursor.getColumnIndex("distrct")));
-				result.setDressingIndex	(cursor.getString(cursor.getColumnIndex("dressingIndex")));
-				result.setExerciseIndex	(cursor.getString(cursor.getColumnIndex("exerciseIndex")));
-				result.setHumidity		(cursor.getString(cursor.getColumnIndex("humidity")));
-				result.setPollutionIndex(cursor.getString(cursor.getColumnIndex("pollutionIndex")));
-				result.setProvince		(cursor.getString(cursor.getColumnIndex("province")));
-				result.setSunrise		(cursor.getString(cursor.getColumnIndex("sunrise")));
-				result.setSunset		(cursor.getString(cursor.getColumnIndex("sunset")));
-				result.setTemperature	(cursor.getString(cursor.getColumnIndex("temperature")));
-				result.setTime			(cursor.getString(cursor.getColumnIndex("time")));
-				result.setUpdateTime	(cursor.getString(cursor.getColumnIndex("updateTime")));
-				result.setWashIndex		(cursor.getString(cursor.getColumnIndex("washIndex")));
-				result.setWeather		(cursor.getString(cursor.getColumnIndex("weather")));
-				result.setWeek			(cursor.getString(cursor.getColumnIndex("weak")));
-				result.setWind			(cursor.getString(cursor.getColumnIndex("wind")));
-				result.setColdIndex		(cursor.getString(cursor.getColumnIndex("coldIndex")));
-				
+				StarCounty starCounty =  new StarCounty();	
+				String contentJson			= (cursor.getString(cursor.getColumnIndex("contentJson")));
+				starCounty.weather_code 	= (cursor.getString(cursor.getColumnIndex("weather_code")));
+				starCounty.weather		 	= new Gson().fromJson(contentJson, StarWeather.class);				
 				list.add(starCounty);
 			}while(cursor.moveToNext());
 		}

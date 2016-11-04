@@ -4,22 +4,29 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
-    <ImageView 
-        android:id="@+id/imageHead"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
-        android:background="@drawable/kaola"/>
-    
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/holo_blue_bright" >
+
+        <ImageView
+            android:id="@+id/imageHead"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:layout_gravity="center"
+            android:background="@drawable/kaola" />
+    </LinearLayout>
+
     <Button
         android:id="@+id/btn1"
-		style="@style/left_menu_btn" />
+        style="@style/left_menu_btn" />
 
     <Button
         android:id="@+id/btn2"
-        style="@style/left_menu_btn"/>
+        style="@style/left_menu_btn" />
 
-    <Button 
+    <Button
         android:id="@+id/btn3"
-        style="@style/left_menu_btn"/>
+        style="@style/left_menu_btn" />
 
 </LinearLayout>

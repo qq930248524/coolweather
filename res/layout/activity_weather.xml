@@ -28,7 +28,7 @@
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_toLeftOf="@id/btn_share"
-            android:background="@drawable/refresh"/>
+            android:background="@drawable/head_refresh_normal"/>
     </RelativeLayout>
 
     <LinearLayout

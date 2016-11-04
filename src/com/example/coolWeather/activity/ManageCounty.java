@@ -2,7 +2,7 @@ package com.example.coolWeather.activity;
 
 import java.util.ArrayList;
 
-import com.example.coolWeather.adapter.ListViewAdapter;
+import com.example.coolWeather.adapter.ManageCountyListViewAdapter;
 import com.example.coolWeather.db.CoolWeatherDB;
 import com.example.coolWeather.model.StarCounty;
 import com.example.greattest.R;
@@ -14,6 +14,9 @@ import com.handmark.pulltorefresh.library.PullToRefreshListView;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.view.animation.LayoutAnimationController;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -59,9 +62,16 @@ public class ManageCounty extends RootActivity {
 			}
 		});		
 		
+		//设置listvieww属性、动画、适配器
 		ListView listView = refreshListView.getRefreshableView();
-		ListViewAdapter madapter = new ListViewAdapter(this, listView, R.layout.listview_item, dataList, coolWeatherDb);
+		ManageCountyListViewAdapter madapter = new ManageCountyListViewAdapter(this, listView, R.layout.listview_item, dataList, coolWeatherDb);
 		listView.setAdapter(madapter);
+		
+		Animation animation = AnimationUtils.loadAnimation(this, R.anim.listview_item_translate);
+		LayoutAnimationController anmController = new LayoutAnimationController(animation);
+		anmController.setDelay(0.3f);
+		anmController.setOrder(LayoutAnimationController.ORDER_NORMAL);
+		listView.setLayoutAnimation(anmController);
 	}
 	
 	private class MyAsyncTask extends AsyncTask<Void, Void, String>{
